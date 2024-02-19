@@ -9,3 +9,71 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  password String
+
+  visited UserVisitedPlaces[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Place {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  description String
+  latitude    Float
+  longitude   Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visitedBy UserVisitedPlaces[]
+  images    Image[]
+  reviews   Review[]
+}
+
+model UserVisitedPlaces {
+  id      Int @id @default(autoincrement())
+  userId  Int
+  placeId Int
+
+  user  User  @relation(fields: [userId], references: [id])
+  place Place @relation(fields: [placeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id       Int    @id @default(autoincrement())
+  fileName String
+  data     Bytes
+
+  placeId Int?
+  place   Place? @relation(fields: [placeId], references: [id])
+
+  reviewId Int?
+  review   Review? @relation(fields: [reviewId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id      Int    @id @default(autoincrement())
+  comment String @db.Text
+  rating  Float
+
+  placeId Int
+  place   Place @relation(fields: [placeId], references: [id])
+
+  images Image[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
