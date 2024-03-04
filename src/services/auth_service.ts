@@ -5,8 +5,8 @@ import { Res } from '../utils/res';
 
 export namespace AuthService {
   export async function register(req: Request, res: Response) {
-    let email = req.body.email;
-    let password = req.body.password;
+    const email = req.body.email;
+    const password = req.body.password;
 
     if (!email || !password) {
       return Res.properties_required(res, ['email', 'password']);
@@ -40,8 +40,8 @@ export namespace AuthService {
   }
 
   export async function login(req: Request, res: Response) {
-    let email = req.body.email;
-    let password = req.body.password;
+    const email = req.body.email;
+    const password = req.body.password;
 
     if (!email || !password) {
       return Res.properties_required(res, ['email', 'password']);

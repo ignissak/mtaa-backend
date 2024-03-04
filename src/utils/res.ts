@@ -35,7 +35,7 @@ export namespace Res {
     });
   }
 
-  export function properties_required(res: Response, properties: String[]) {
+  export function properties_required(res: Response, properties: string[]) {
     return res.status(400).json({
       status: 400,
       success: false,
@@ -74,7 +74,7 @@ export namespace Res {
       .json({ status: 409, success: false, error: 'Conflict!', data: [] });
   }
 
-  export function created(res: Response, data: any) {
+  export function created(res: Response, data: unknown) {
     return res.status(201).json({ status: 201, success: true, data });
   }
 }

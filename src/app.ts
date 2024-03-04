@@ -1,12 +1,13 @@
 import express from 'express';
 import index_route from './routes/index_route';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-/** @ts-ignore */
-import * as bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import session from 'express-session';
 import prisma from './db';
 import auth_route from './routes/auth_route';
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class App {
   public express: express.Application;
