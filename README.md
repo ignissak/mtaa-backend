@@ -26,7 +26,6 @@ This is the backend of the MTAA project. It is a REST API that provides data for
 2. Run `npx prisma migrate deploy` to run all the migrations
 <!-- TODO: Database seeding -->
 
-
 ### Run
 
 - Run `npm run dev` to start the server in development mode

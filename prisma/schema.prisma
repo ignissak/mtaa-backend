@@ -20,9 +20,10 @@ model User {
   visited  UserVisitedPlaces[]
   settings UserSettings?
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  userSettingsId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email, points])
 }
 
 model UserSettings {
@@ -43,6 +44,7 @@ enum PlaceType {
   MUSEUM
   PARK
   BEACH
+  CASTLE
   OTHER
 }
 
@@ -53,6 +55,7 @@ model Place {
   latitude    Float
   longitude   Float
   type        PlaceType
+  points      Int       @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,6 +64,8 @@ model Place {
   images    Image[]
   reviews   Review[]
   links     ExternalLink[]
+
+  @@index([latitude, longitude, name])
 }
 
 model UserVisitedPlaces {
@@ -69,7 +74,7 @@ model UserVisitedPlaces {
   placeId Int
 
   user  User  @relation(fields: [userId], references: [id])
-  place Place @relation(fields: [placeId], references: [id])
+  place Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,10 +86,10 @@ model Image {
   data     Bytes
 
   placeId Int?
-  place   Place? @relation(fields: [placeId], references: [id])
+  place   Place? @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   reviewId Int?
-  review   Review? @relation(fields: [reviewId], references: [id])
+  review   Review? @relation(fields: [reviewId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,7 +101,7 @@ model Review {
   rating  Float
 
   placeId Int
-  place   Place @relation(fields: [placeId], references: [id])
+  place   Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   images Image[]
 
@@ -109,6 +114,7 @@ enum LinkType {
   FACEBOOK
   INSTAGRAM
   EMAIL
+  WIKI
 }
 
 model ExternalLink {
@@ -118,7 +124,7 @@ model ExternalLink {
   alt  String
 
   placeId Int
-  place   Place @relation(fields: [placeId], references: [id])
+  place   Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

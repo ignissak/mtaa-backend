@@ -22,11 +22,11 @@ export namespace Res {
     });
   }
 
-  export function success(res: Response, object: Object) {
+  export function success(res: Response, object: unknown) {
     return res.status(200).json({ status: 200, success: true, data: object });
   }
 
-  export function property_required(res: Response, property: String) {
+  export function property_required(res: Response, property: string) {
     return res.status(400).json({
       status: 400,
       success: false,
@@ -47,7 +47,7 @@ export namespace Res {
       .json({ status: 500, success: false, error: err.message, data: [] });
   }
 
-  export function errorWithText(res: Response, err: String) {
+  export function errorWithText(res: Response, err: string) {
     return res
       .status(500)
       .json({ status: 500, success: false, error: err, data: [] });
