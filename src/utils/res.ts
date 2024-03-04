@@ -35,6 +35,15 @@ export namespace Res {
     });
   }
 
+  export function properties_required(res: Response, properties: string[]) {
+    return res.status(400).json({
+      status: 400,
+      success: false,
+      error: 'Properties ' + properties + ' are required!',
+      data: [],
+    });
+  }
+
   export function bad_request(res: Response, message: string) {
     return res
       .status(400)
@@ -53,9 +62,19 @@ export namespace Res {
       .json({ status: 500, success: false, error: err, data: [] });
   }
 
-  export function noPerms(res: Response) {
+  export function unauthorized(res: Response) {
     return res
       .status(403)
       .json({ status: 403, success: false, error: 'Unauthorized!', data: [] });
+  }
+
+  export function conflict(res: Response) {
+    return res
+      .status(409)
+      .json({ status: 409, success: false, error: 'Conflict!', data: [] });
+  }
+
+  export function created(res: Response, data: unknown) {
+    return res.status(201).json({ status: 201, success: true, data });
   }
 }
