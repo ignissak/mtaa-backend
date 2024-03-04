@@ -1,7 +1,6 @@
 import { Express } from 'express';
 import listEndpoints from 'express-list-endpoints';
 import App from './app';
-
 const app = App;
 
 type Endpoint = {
@@ -15,7 +14,7 @@ const formatEndpoint = (
   methods: string[],
   middlewares: string[],
 ) => {
-  return `${methods.join(', ')} : ${path} [${middlewares.join(', ')}]`;
+  return `${methods.join(', ')} \t: ${path} [${middlewares.join(', ')}]`;
 };
 
 app.listen(3000, () => {

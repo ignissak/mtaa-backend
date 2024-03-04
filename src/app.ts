@@ -1,16 +1,40 @@
 import express from 'express';
 import index_route from './routes/index_route';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+/** @ts-ignore */
+import * as bodyParser from 'body-parser';
+import session from 'express-session';
+import prisma from './db';
+import auth_route from './routes/auth_route';
+require('dotenv').config();
 
 class App {
   public express: express.Application;
 
   constructor() {
     this.express = express();
+
+    this.express.use(bodyParser.json());
+    this.express.use(bodyParser.urlencoded({ extended: true }));
+    this.express.use(
+      session({
+        secret: process.env.SECRET as string,
+        resave: true,
+        saveUninitialized: true,
+        store: new PrismaSessionStore(prisma, {
+          checkPeriod: 2 * 60 * 1000, //ms
+          dbRecordIdIsSessionId: true,
+          dbRecordIdFunction: undefined,
+        }),
+      }),
+    );
+
     this.routes();
   }
 
   private routes(): void {
     this.express.use('', index_route);
+    this.express.use('/auth', auth_route);
   }
 }
 
