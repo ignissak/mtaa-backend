@@ -20,8 +20,8 @@ async function main() {
       name: 'Bratislavský hrad',
       description:
         'Bratislavský hrad je súbor stavieb v historickom areáli, ktorý zaberá vrchol návršia na juhozápadnom ostrohu malokarpatského chrbta na ľavom brehu Dunaja v Bratislave. Hradu dominuje monumentálna stavba bývalého kráľovského paláca tvoriaca neodmysliteľnú panorámu hlavného mesta Slovenska. Svojím zástojom v dejinách Veľkej Moravy, Uhorska, Česko-Slovenska a moderného Slovenska predstavuje Bratislavský hrad významný pamätník spoločensko-historického vývoja v tejto oblasti. ',
-      latitude: 48.0832,
-      longitude: 17.06,
+      latitude: 48.14221557240078,
+      longitude: 17.10021103662275,
       points: 10,
       type: 'CASTLE',
       images: {
@@ -42,8 +42,8 @@ async function main() {
       name: 'Prezidentský palác',
       description:
         'Primaciálny palác je klasicistická palácová stavba na Primaciálnom námestí v Bratislave, niekdajšie sídlo ostrihomského arcibiskupa, najvýznamnejšia architektonická pamiatka uvedeného slohového obdobia v meste. Dnes je palác sídlom primátora hlavného mesta Bratislavy; niektoré jeho časti slúžia expozícii Galérie mesta Bratislavy. ',
-      latitude: 48.0838,
-      longitude: 17.0636,
+      latitude: 48.14906814208894,
+      longitude: 17.107696964087488,
       points: 5,
       type: 'OTHER',
       images: {
@@ -64,8 +64,8 @@ async function main() {
       name: 'Slavín',
       description:
         'Slavín je Bratislavský pamätník sovietskych vojakov padlých počas druhej svetovej vojny na území západného Slovenska. Spolu s cintorínom padlých v prvej svetovej vojne v Petržalke predstavuje jediný vojenský cintorín v Bratislave.',
-      latitude: 48.0914,
-      longitude: 17.0559,
+      latitude: 48.15389840609625,
+      longitude: 17.09970562184009,
       points: 10,
       type: 'OTHER',
       images: {

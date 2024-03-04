@@ -20,9 +20,10 @@ model User {
   visited  UserVisitedPlaces[]
   settings UserSettings?
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  userSettingsId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email, points])
 }
 
 model UserSettings {
@@ -63,6 +64,8 @@ model Place {
   images    Image[]
   reviews   Review[]
   links     ExternalLink[]
+
+  @@index([latitude, longitude, name])
 }
 
 model UserVisitedPlaces {
