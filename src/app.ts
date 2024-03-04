@@ -1,4 +1,5 @@
 import express from 'express';
+import index_route from './routes/index_route';
 
 class App {
   public express: express.Application;
@@ -9,13 +10,7 @@ class App {
   }
 
   private routes(): void {
-    const router = express.Router();
-    router.get('/', (req, res, next) => {
-      res.json({
-        message: 'Hello World!',
-      });
-    });
-    this.express.use('/', router);
+    this.express.use('', index_route);
   }
 }
 
