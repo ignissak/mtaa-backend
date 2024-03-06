@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import listEndpoints from 'express-list-endpoints';
 import App from './app';
+import { Cron } from './cron';
 const app = App;
 
 type Endpoint = {
@@ -27,4 +28,6 @@ app.listen(3000, () => {
       formatEndpoint(endpoint.path, endpoint.methods, endpoint.middlewares),
     );
   });
+
+  const cron = new Cron();
 });

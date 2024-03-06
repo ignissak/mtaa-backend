@@ -77,6 +77,116 @@ async function main() {
     },
   });
 
+  const bratislavaZooImage = toBase64('./assets/bratislava_zoo.jpg');
+
+  const bratislavaZoo = await prisma.place.upsert({
+    where: { name: 'Bratislavská zoologická záhrada' },
+    update: {},
+    create: {
+      name: 'Bratislavská zoologická záhrada',
+      description:
+        'Bratislavská zoologická záhrada je zoologická záhrada v Bratislave, ktorá sa nachádza v mestskej časti Karlova Ves. Záhrada je rozlohou najväčšou zoologickou záhradou na Slovensku. ',
+      latitude: 48.15673311620213,
+      longitude: 17.075690661292583,
+      points: 5,
+      type: 'OTHER',
+      images: {
+        create: {
+          fileName: 'bratislava_zoo.jpg',
+          data: await bratislavaZooImage,
+        },
+      },
+    },
+  });
+
+  const cathedralMartinImage = toBase64('./assets/cathedral_martin.jpg');
+
+  const cathedralMartin = await prisma.place.upsert({
+    where: { name: 'Dóm svätého Martina' },
+    update: {},
+    create: {
+      name: 'Dóm svätého Martina',
+      description:
+        'Dóm svätého Martina je rímskokatolícky kostol v Bratislave, ktorý je sídlom bratislavského arcibiskupa. ',
+      latitude: 48.14217843442503,
+      longitude: 17.104972961343652,
+      points: 5,
+      type: 'OTHER',
+      images: {
+        create: {
+          fileName: 'cathedral_martin.jpg',
+          data: await cathedralMartinImage,
+        },
+      },
+    },
+  });
+
+  const horskyParkImage = toBase64('./assets/horsky_park.jpg');
+
+  const horskyPark = await prisma.place.upsert({
+    where: { name: 'Horský park' },
+    update: {},
+    create: {
+      name: 'Horský park',
+      description:
+        'Malebný park na úbočí založený v 19. storočí ponúka chodníky v dubovom lese, ihrisko a kaviareň.',
+      latitude: 48.158071300776406,
+      longitude: 17.09067060514125,
+      points: 5,
+      type: 'PARK',
+      images: {
+        create: {
+          fileName: 'horsky_park.jpg',
+          data: await horskyParkImage,
+        },
+      },
+    },
+  });
+
+  const kralovaHolaImage = toBase64('./assets/kralova_hola.jpg');
+
+  const kralovaHola = await prisma.place.upsert({
+    where: { name: 'Kráľova hola' },
+    update: {},
+    create: {
+      name: 'Kráľova hola',
+      description:
+        'Krížna je 1574 m n. m. vysoký vrch v Nízkych Tatrách na Slovensku. ',
+      latitude: 48.161626645219236,
+      longitude: 17.03530026392443,
+      points: 10,
+      type: 'OTHER',
+      images: {
+        create: {
+          fileName: 'kralova_hola.jpg',
+          data: await kralovaHolaImage,
+        },
+      },
+    },
+  });
+
+  const michalskaBranaImage = toBase64('./assets/michalska_brana.jpg');
+
+  const michalskaBrana = await prisma.place.upsert({
+    where: { name: 'Michalská brána' },
+    update: {},
+    create: {
+      name: 'Michalská brána',
+      description:
+        'Vstupná brána mestského opevnenia zo 14. storočia s múzeom zbraní a výhľadom z vrchu.',
+      latitude: 48.145209683618894,
+      longitude: 17.106766472415384,
+      points: 5,
+      type: 'OTHER',
+      images: {
+        create: {
+          fileName: 'michalska_brana.jpg',
+          data: await michalskaBranaImage,
+        },
+      },
+    },
+  });
+
   const alice = await prisma.user.upsert({
     where: { email: 'alice@example.com' },
     update: {},
@@ -119,6 +229,47 @@ async function main() {
             },
             {
               placeId: presidentialPalace.id,
+            },
+          ],
+        },
+      },
+    },
+  });
+
+  const agnes = await prisma.user.upsert({
+    where: { email: 'agnes@example.com' },
+    update: {},
+    create: {
+      email: 'agnes@example.com',
+      name: 'Agnes',
+      password: '$2b$10$53ZZpDk.1FVFt4TZxgrZ/OoAmE4StOiztI0z5muDNjsWfjw8Kujj.',
+      points: 55,
+      visited: {
+        createMany: {
+          data: [
+            {
+              placeId: bratislavaCastle.id,
+            },
+            {
+              placeId: presidentialPalace.id,
+            },
+            {
+              placeId: slavin.id,
+            },
+            {
+              placeId: bratislavaZoo.id,
+            },
+            {
+              placeId: cathedralMartin.id,
+            },
+            {
+              placeId: horskyPark.id,
+            },
+            {
+              placeId: kralovaHola.id,
+            },
+            {
+              placeId: michalskaBrana.id,
             },
           ],
         },
