@@ -22,6 +22,9 @@ class App {
         secret: process.env.SECRET as string,
         resave: true,
         saveUninitialized: true,
+        cookie: {
+          maxAge: 20 *365 * 24 * 60 * 60 * 1000, // 20 years, lol
+        },
         store: new PrismaSessionStore(prisma, {
           checkPeriod: 2 * 60 * 1000, //ms
           dbRecordIdIsSessionId: true,
