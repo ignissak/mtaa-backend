@@ -10,7 +10,7 @@ class PlacesRoutes {
   }
 
   public init() {
-    this.router.get('', PlacesService.getNearbyPlaces);
+    this.router.get('', PlacesService.searchPlaces);
     this.router.get('/trending', PlacesService.getTrendingPlaces);
 
     this.router.get('/visits/:userId', PlacesService.getUserVisitedPlaces);

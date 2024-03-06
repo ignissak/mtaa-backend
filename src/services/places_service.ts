@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
 import prisma from '../db';
 import { GPS } from '../utils/gps';
@@ -190,8 +191,8 @@ export namespace PlacesService {
   /**
    * GET /places?page=1&limit=10
    */
-  export async function getNearbyPlaces(req: Request, res: Response) {
-    const { latitude, longitude } = req.body;
+  export async function searchPlaces(req: Request, res: Response) {
+    let { latitude, longitude, query, type } = req.body;
     const limit = parseInt(req.query.limit as string) || 10;
     const page = parseInt(req.query.page as string) || 1;
     if (!latitude || !longitude) {
@@ -199,6 +200,21 @@ export namespace PlacesService {
     }
 
     const count = await prisma.place.count();
+
+    const searchConditions: Prisma.Sql[] = [];
+    if (query) {
+      searchConditions.push(
+        Prisma.sql`(p.name ILIKE CONCAT('%', ${query}, '%') OR p.description ILIKE CONCAT('%', ${query}, '%'))`, 
+        // for some reason we cant use '%query%' https://github.com/prisma/prisma/discussions/20568
+      );
+    }
+    if (type) {
+      searchConditions.push(Prisma.sql`(p.type::text = UPPER(${type}))`);
+    }
+    const where =
+      searchConditions.length > 0
+        ? Prisma.sql`WHERE ${Prisma.join(searchConditions, ' AND ')}`
+        : Prisma.empty;
 
     const result = (await prisma.$queryRaw`
       SELECT
@@ -211,6 +227,7 @@ export namespace PlacesService {
           )) AS distance
       FROM
           public."Place" p
+      ${where}
       ORDER BY
           distance
       LIMIT ${limit}
