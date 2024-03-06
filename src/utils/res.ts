@@ -26,6 +26,19 @@ export namespace Res {
     return res.status(200).json({ status: 200, success: true, data: object });
   }
 
+  export function successPaginated(
+    res: Response,
+    object: unknown,
+    numOfPages: number,
+  ) {
+    return res.status(200).json({
+      status: 200,
+      success: true,
+      data: object,
+      numOfPages,
+    });
+  }
+
   export function property_required(res: Response, property: string) {
     return res.status(400).json({
       status: 400,

@@ -8,6 +8,8 @@ services:
       - default
     ports:
       - '5432:5432'
+    volumes:
+      - mtaa-db:/var/lib/postgresql/data
   backend:
     build:
       context: .
@@ -23,3 +25,7 @@ services:
 
 networks:
   default:
+
+volumes:
+  mtaa-db:
+    driver: local

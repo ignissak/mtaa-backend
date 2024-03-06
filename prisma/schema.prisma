@@ -57,14 +57,14 @@ enum PlaceType {
 }
 
 model Place {
-  id            Int       @id @default(autoincrement())
-  qr_identifier String    @unique @default(uuid())
-  name          String    @unique
-  description   String
-  latitude      Float
-  longitude     Float
-  type          PlaceType
-  points        Int       @default(0)
+  id           Int       @id @default(autoincrement())
+  qrIdentifier String    @unique @default(uuid()) @map("qr_identifier")
+  name         String    @unique
+  description  String
+  latitude     Float
+  longitude    Float
+  type         PlaceType
+  points       Int       @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

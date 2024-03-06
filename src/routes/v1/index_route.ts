@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { IndexService } from '../services/index_service';
+import { IndexService } from '../../services/index_service';
 
 class IndexRoutes {
   public router: Router;
