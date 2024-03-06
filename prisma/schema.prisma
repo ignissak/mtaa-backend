@@ -56,6 +56,18 @@ enum PlaceType {
   OTHER
 }
 
+enum Region {
+  BRATISLAVA
+  TRNAVA
+  TRENCIN
+  NITRA
+  ZILINA
+  BANSKA_BYSTRICA
+  PRESOV
+  KOSICE
+  OTHER
+}
+
 model Place {
   id           Int       @id @default(autoincrement())
   qrIdentifier String    @unique @default(uuid()) @map("qr_identifier")
@@ -64,6 +76,7 @@ model Place {
   latitude     Float
   longitude    Float
   type         PlaceType
+  region       Region    @default(OTHER)
   points       Int       @default(0)
 
   createdAt DateTime @default(now())
