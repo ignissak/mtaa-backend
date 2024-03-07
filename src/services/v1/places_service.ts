@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
+import { readFile } from 'fs/promises';
 import prisma from '../../db';
 import { GPS } from '../../utils/gps';
 import { Res } from '../../utils/res';
@@ -313,12 +314,34 @@ export namespace PlacesService {
         rating: true,
         comment: true,
         createdAt: true,
+        images: {
+          select: {
+            id: true,
+            fileName: true,
+          },
+        },
       },
       take: limit,
       skip: (page - 1) * limit,
       orderBy: {
         createdAt: 'desc',
       },
+    });
+
+    reviews.map(async (review) => {
+      let images = await Promise.all(
+        review.images.map(async (image) => {
+          const fileName = image.fileName;
+          const data = await readFile(`public/images/${fileName}`);
+          return {
+            id: image.id,
+            fileName: fileName,
+            data: data.toString('base64'),
+          };
+        }),
+      );
+      review.images = images;
+      return review;
     });
 
     const sumOfRatings = await prisma.review.aggregate({
@@ -361,6 +384,7 @@ export namespace PlacesService {
     if (!rating || !comment) {
       return Res.properties_required(res, ['rating', 'comment']);
     }
+    const fileName = req.file?.filename;
 
     const visited = await prisma.userVisitedPlaces.findFirst({
       where: {
@@ -387,14 +411,17 @@ export namespace PlacesService {
         },
       },
       update: {
-        rating: rating,
+        rating: parseInt(rating),
         comment: comment,
       },
       create: {
         userId: userId,
         placeId: placeId,
-        rating: rating,
+        rating: parseInt(rating),
         comment: comment,
+        images: {
+          create: fileName ? { fileName: fileName } : undefined,
+        },
       },
     });
 
