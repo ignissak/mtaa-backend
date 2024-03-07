@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Res } from '../utils/res';
+import { Res } from '../../utils/res';
 
 export namespace IndexService {
   export async function getPackageVersion(req: Request, res: Response) {

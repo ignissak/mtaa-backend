@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
-import prisma from '../db';
-import { Res } from '../utils/res';
+import prisma from '../../db';
+import { Res } from '../../utils/res';
 
 export namespace AuthService {
   export async function register(req: Request, res: Response) {

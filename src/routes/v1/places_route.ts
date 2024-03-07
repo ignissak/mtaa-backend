@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PlacesService } from '../../services/places_service';
+import { PlacesService } from '../../services/v1/places_service';
 
 class PlacesRoutes {
   public router: Router;

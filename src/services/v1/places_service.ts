@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
-import prisma from '../db';
-import { GPS } from '../utils/gps';
-import { Res } from '../utils/res';
+import prisma from '../../db';
+import { GPS } from '../../utils/gps';
+import { Res } from '../../utils/res';
 
 type Place = {
   id: number;
@@ -204,7 +204,7 @@ export namespace PlacesService {
     const searchConditions: Prisma.Sql[] = [];
     if (query) {
       searchConditions.push(
-        Prisma.sql`(p.name ILIKE CONCAT('%', ${query}, '%') OR p.description ILIKE CONCAT('%', ${query}, '%'))`, 
+        Prisma.sql`(p.name ILIKE CONCAT('%', ${query}, '%') OR p.description ILIKE CONCAT('%', ${query}, '%'))`,
         // for some reason we cant use '%query%' https://github.com/prisma/prisma/discussions/20568
       );
     }

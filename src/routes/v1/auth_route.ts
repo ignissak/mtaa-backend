@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { AuthService } from '../../services/auth_service';
+import { AuthService } from '../../services/v1/auth_service';
 
 class AuthRoutes {
   public router: Router;
