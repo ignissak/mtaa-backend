@@ -29,5 +29,5 @@ app.listen(3000, () => {
     );
   });
 
-  const cron = new Cron();
+  new Cron();
 });

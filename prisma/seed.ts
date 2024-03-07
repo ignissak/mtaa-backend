@@ -1,14 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import fs from 'fs';
-import path from 'path';
 
 const prisma = new PrismaClient();
-
-async function toBase64(filePath: string) {
-  const imagePath = path.join(__dirname, filePath);
-  const image = fs.readFileSync(imagePath);
-  return Buffer.from(image);
-}
 
 async function main() {
   const bratislavaCastle = await prisma.place.upsert({
@@ -66,7 +58,7 @@ async function main() {
         },
       },
     },
-  });;
+  });
 
   const bratislavaZoo = await prisma.place.upsert({
     where: { name: 'Bratislavská zoologická záhrada' },
@@ -253,7 +245,7 @@ async function main() {
     },
   });
 
-  console.log({ bratislavaCastle, presidentialPalace, slavin, alice, john });
+  console.log({ slavin, alice, john, agnes });
 }
 
 main()
