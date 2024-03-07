@@ -107,7 +107,6 @@ model UserVisitedPlaces {
 model Image {
   id       Int    @id @default(autoincrement())
   fileName String
-  data     Bytes
 
   placeId Int?
   place   Place? @relation(fields: [placeId], references: [id], onDelete: Cascade)
