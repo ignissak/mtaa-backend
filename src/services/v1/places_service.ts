@@ -280,4 +280,167 @@ export namespace PlacesService {
 
     return Res.success(res, result);
   }
+
+  /* Reviews */
+
+  /** 
+    GET /places/reviews/:placeId?page=1&limit=10
+  */
+  export async function getPlaceReviews(req: Request, res: Response) {
+    const placeId = parseInt(req.params.placeId);
+    if (!placeId) {
+      return Res.property_required(res, 'placeId');
+    }
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    if (page < 1 || limit < 1) {
+      return Res.bad_request(res, 'Invalid page or limit');
+    }
+
+    const count = await prisma.review.count({
+      where: {
+        placeId: placeId,
+      },
+    });
+
+    const reviews = await prisma.review.findMany({
+      where: {
+        placeId: placeId,
+      },
+      select: {
+        id: true,
+        rating: true,
+        comment: true,
+        createdAt: true,
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const sumOfRatings = await prisma.review.aggregate({
+      where: {
+        placeId: placeId,
+      },
+      _sum: {
+        rating: true,
+      },
+    });
+
+    const countOfReviews = await prisma.review.count({
+      where: {
+        placeId: placeId,
+      },
+    });
+
+    return Res.successPaginated(res, reviews, Math.ceil(count / limit), {
+      sumOfRatings,
+      countOfReviews,
+    });
+  }
+
+  /**
+   * PUT /places/reviews/:placeId
+   */
+  export async function upsertPlaceReview(req: Request, res: Response) {
+    const placeId = parseInt(req.params.placeId);
+    if (!placeId) {
+      return Res.property_required(res, 'placeId');
+    }
+
+    const userId = req.session.userId;
+    if (!userId) {
+      return Res.unauthorized(res);
+    }
+
+    const body = req.body;
+    const { rating, comment } = body;
+    if (!rating || !comment) {
+      return Res.properties_required(res, ['rating', 'comment']);
+    }
+
+    const visited = await prisma.userVisitedPlaces.findFirst({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            placeId: placeId,
+          },
+        ],
+      },
+    });
+
+    if (!visited) {
+      return Res.bad_request(res, 'You have to visit the place first');
+    }
+
+    const review = await prisma.review.upsert({
+      where: {
+        userId_placeId: {
+          userId: userId,
+          placeId: placeId,
+        },
+      },
+      update: {
+        rating: rating,
+        comment: comment,
+      },
+      create: {
+        userId: userId,
+        placeId: placeId,
+        rating: rating,
+        comment: comment,
+      },
+    });
+
+    return Res.success(res, review);
+  }
+
+  /**
+   * DELETE /places/reviews/:placeId
+   */
+  export async function deletePlaceReview(req: Request, res: Response) {
+    const placeId = parseInt(req.params.placeId);
+    if (!placeId) {
+      return Res.property_required(res, 'placeId');
+    }
+
+    const userId = req.session.userId;
+    if (!userId) {
+      return Res.unauthorized(res);
+    }
+
+    const review = await prisma.review.findFirst({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            placeId: placeId,
+          },
+        ],
+      },
+    });
+
+    if (!review) {
+      return Res.not_found(res);
+    }
+
+    const deleted = await prisma.review.delete({
+      where: {
+        userId_placeId: {
+          userId: userId,
+          placeId: placeId,
+        },
+      },
+    });
+
+    return Res.success(res, deleted);
+  }
 }

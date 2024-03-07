@@ -16,6 +16,10 @@ class PlacesRoutes {
     this.router.get('/visits/:userId', PlacesService.getUserVisitedPlaces);
     this.router.delete('/visits/:placeId', PlacesService.deleteVisitedPlace);
     this.router.post('/visits/:placeId', PlacesService.addVisitedPlace);
+
+    this.router.get('/reviews/:placeId', PlacesService.getPlaceReviews);
+    this.router.put('/reviews/:placeId', PlacesService.upsertPlaceReview);
+    this.router.delete('/reviews/:placeId', PlacesService.deletePlaceReview);
   }
 }
 

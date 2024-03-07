@@ -30,12 +30,14 @@ export namespace Res {
     res: Response,
     object: unknown,
     numOfPages: number,
+    extended: object = {},
   ) {
     return res.status(200).json({
       status: 200,
       success: true,
       data: object,
       numOfPages,
+      ...extended,
     });
   }
 
