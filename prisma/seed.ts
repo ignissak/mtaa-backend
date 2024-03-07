@@ -11,8 +11,6 @@ async function toBase64(filePath: string) {
 }
 
 async function main() {
-  const bratislavaCastleImage = toBase64('./assets/bratislava_castle.jpg');
-
   const bratislavaCastle = await prisma.place.upsert({
     where: { name: 'Bratislavský hrad' },
     update: {},
@@ -26,14 +24,11 @@ async function main() {
       type: 'CASTLE',
       images: {
         create: {
-          data: await bratislavaCastleImage,
           fileName: 'bratislava-castle.jpg',
         },
       },
     },
   });
-
-  const presidentialPalaceImage = toBase64('./assets/presidential_palace.jpg');
 
   const presidentialPalace = await prisma.place.upsert({
     where: { name: 'Prezidentský palác' },
@@ -49,13 +44,10 @@ async function main() {
       images: {
         create: {
           fileName: 'presidential_palace.jpg',
-          data: await presidentialPalaceImage,
         },
       },
     },
   });
-
-  const slavinImage = toBase64('./assets/slavin.jpg');
 
   const slavin = await prisma.place.upsert({
     where: { name: 'Slavín' },
@@ -71,13 +63,10 @@ async function main() {
       images: {
         create: {
           fileName: 'slavin.jpg',
-          data: await slavinImage,
         },
       },
     },
-  });
-
-  const bratislavaZooImage = toBase64('./assets/bratislava_zoo.jpg');
+  });;
 
   const bratislavaZoo = await prisma.place.upsert({
     where: { name: 'Bratislavská zoologická záhrada' },
@@ -93,13 +82,10 @@ async function main() {
       images: {
         create: {
           fileName: 'bratislava_zoo.jpg',
-          data: await bratislavaZooImage,
         },
       },
     },
   });
-
-  const cathedralMartinImage = toBase64('./assets/cathedral_martin.jpg');
 
   const cathedralMartin = await prisma.place.upsert({
     where: { name: 'Dóm svätého Martina' },
@@ -115,13 +101,10 @@ async function main() {
       images: {
         create: {
           fileName: 'cathedral_martin.jpg',
-          data: await cathedralMartinImage,
         },
       },
     },
   });
-
-  const horskyParkImage = toBase64('./assets/horsky_park.jpg');
 
   const horskyPark = await prisma.place.upsert({
     where: { name: 'Horský park' },
@@ -137,13 +120,10 @@ async function main() {
       images: {
         create: {
           fileName: 'horsky_park.jpg',
-          data: await horskyParkImage,
         },
       },
     },
   });
-
-  const kralovaHolaImage = toBase64('./assets/kralova_hola.jpg');
 
   const kralovaHola = await prisma.place.upsert({
     where: { name: 'Kráľova hola' },
@@ -159,13 +139,10 @@ async function main() {
       images: {
         create: {
           fileName: 'kralova_hola.jpg',
-          data: await kralovaHolaImage,
         },
       },
     },
   });
-
-  const michalskaBranaImage = toBase64('./assets/michalska_brana.jpg');
 
   const michalskaBrana = await prisma.place.upsert({
     where: { name: 'Michalská brána' },
@@ -181,7 +158,6 @@ async function main() {
       images: {
         create: {
           fileName: 'michalska_brana.jpg',
-          data: await michalskaBranaImage,
         },
       },
     },
