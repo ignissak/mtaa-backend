@@ -192,7 +192,7 @@ export namespace PlacesService {
    * GET /places?page=1&limit=10
    */
   export async function searchPlaces(req: Request, res: Response) {
-    let { latitude, longitude, query, type } = req.body;
+    const { latitude, longitude, query, type } = req.body;
     const limit = parseInt(req.query.limit as string) || 10;
     const page = parseInt(req.query.page as string) || 1;
     if (!latitude || !longitude) {
