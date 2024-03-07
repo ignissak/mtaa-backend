@@ -7,8 +7,8 @@ export class Storage {
     },
     filename: (req, file, cb) => {
       // insert before extension Date
-      let name = file.originalname.split('.');
-      let date = new Date().getTime();
+      const name = file.originalname.split('.');
+      const date = new Date().getTime();
       cb(null, name[0] + '-' + date + '.' + name[1]);
     },
   });

@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Lint PR title
+      - name: Lint
         run: npm run lint
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

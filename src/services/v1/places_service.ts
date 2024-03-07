@@ -329,7 +329,7 @@ export namespace PlacesService {
     });
 
     reviews.map(async (review) => {
-      let images = await Promise.all(
+      const images = await Promise.all(
         review.images.map(async (image) => {
           const fileName = image.fileName;
           const data = await readFile(`public/images/${fileName}`);
