@@ -170,6 +170,9 @@ async function main() {
       name: 'Alice',
       password: '$2b$10$53ZZpDk.1FVFt4TZxgrZ/OoAmE4StOiztI0z5muDNjsWfjw8Kujj.',
       points: 25,
+      settings: {
+        create: {},
+      },
       visited: {
         createMany: {
           data: [
@@ -196,6 +199,9 @@ async function main() {
       name: 'John',
       password: '$2b$10$53ZZpDk.1FVFt4TZxgrZ/OoAmE4StOiztI0z5muDNjsWfjw8Kujj.',
       points: 15,
+      settings: {
+        create: {},
+      },
       visited: {
         createMany: {
           data: [
@@ -219,6 +225,9 @@ async function main() {
       name: 'Agnes',
       password: '$2b$10$53ZZpDk.1FVFt4TZxgrZ/OoAmE4StOiztI0z5muDNjsWfjw8Kujj.',
       points: 55,
+      settings: {
+        create: {},
+      },
       visited: {
         createMany: {
           data: [
