@@ -5,6 +5,11 @@ import prisma from '../../db';
 import { GPS } from '../../utils/gps';
 import { Res } from '../../utils/res';
 
+type Image = {
+  fileName: string;
+  data?: string;
+};
+
 type Place = {
   id: number;
   name: string;
@@ -15,7 +20,7 @@ type Place = {
   createdAt: Date;
   updatedAt: Date;
   visitors: number;
-  images: any[];
+  images: Image[];
 };
 
 export namespace PlacesService {
