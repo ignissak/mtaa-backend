@@ -25,6 +25,7 @@ model User {
   points   Int     @default(0) // this field is only for performance reasons
 
   visited        UserVisitedPlaces[]
+  reviews        Review[]
   settings       UserSettings?
   userSettingsId Int?
 
@@ -56,14 +57,28 @@ enum PlaceType {
   OTHER
 }
 
+enum Region {
+  BRATISLAVA
+  TRNAVA
+  TRENCIN
+  NITRA
+  ZILINA
+  BANSKA_BYSTRICA
+  PRESOV
+  KOSICE
+  OTHER
+}
+
 model Place {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  description String
-  latitude    Float
-  longitude   Float
-  type        PlaceType
-  points      Int       @default(0)
+  id           Int       @id @default(autoincrement())
+  qrIdentifier String    @unique @default(uuid()) @map("qr_identifier")
+  name         String    @unique
+  description  String
+  latitude     Float
+  longitude    Float
+  type         PlaceType
+  region       Region    @default(OTHER)
+  points       Int       @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -77,7 +92,6 @@ model Place {
 }
 
 model UserVisitedPlaces {
-  id      Int @id @default(autoincrement())
   userId  Int
   placeId Int
 
@@ -86,12 +100,13 @@ model UserVisitedPlaces {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@id([userId, placeId])
 }
 
 model Image {
   id       Int    @id @default(autoincrement())
   fileName String
-  data     Bytes
 
   placeId Int?
   place   Place? @relation(fields: [placeId], references: [id], onDelete: Cascade)
@@ -111,10 +126,15 @@ model Review {
   placeId Int
   place   Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
 
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
   images Image[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([userId, placeId])
 }
 
 enum LinkType {

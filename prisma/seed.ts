@@ -15,8 +15,15 @@ async function main() {
       points: 10,
       type: 'CASTLE',
       images: {
-        create: {
-          fileName: 'bratislava-castle.jpg',
+        createMany: {
+          data: [
+            {
+              fileName: 'bratislava_castle.jpg',
+            },
+            {
+              fileName: 'bratislava_castle2.jpg',
+            },
+          ],
         },
       },
     },
