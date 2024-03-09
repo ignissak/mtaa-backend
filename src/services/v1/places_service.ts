@@ -15,6 +15,7 @@ type Place = {
   createdAt: Date;
   updatedAt: Date;
   visitors: number;
+  images: any[];
 };
 
 export namespace PlacesService {
@@ -217,9 +218,10 @@ export namespace PlacesService {
         ? Prisma.sql`WHERE ${Prisma.join(searchConditions, ' AND ')}`
         : Prisma.empty;
 
-    const result = (await prisma.$queryRaw`
+    let result = (await prisma.$queryRaw`
       SELECT
-          *,
+          p.*,
+          array_to_json(array_agg(image."fileName")) as images,
           -- Calculate the distance using the Haversine formula
           6371 * 2 * ASIN(SQRT(
               POWER(SIN(RADIANS((p.latitude - ${latitude}) / 2)), 2) +
@@ -228,7 +230,10 @@ export namespace PlacesService {
           )) AS distance
       FROM
           public."Place" p
+      JOIN public."Image" image on p.id = image."placeId"
       ${where}
+      GROUP BY
+          p.id
       ORDER BY
           distance
       LIMIT ${limit}
@@ -236,11 +241,24 @@ export namespace PlacesService {
     `) as Place[];
 
     // remove qr_identifier, latitude and longitude from the result
-    result.forEach((place) => {
-      delete place.qr_identifier;
-      delete place.latitude;
-      delete place.longitude;
-    });
+    result = await Promise.all(
+      result.map(async (place) => {
+        delete place.qr_identifier;
+        delete place.latitude;
+        delete place.longitude;
+        place.images = await Promise.all(
+          place.images.map(async (image) => {
+            const data = await readFile(`public/images/${image}`);
+            return {
+              fileName: image,
+              data: data.toString('base64'),
+            };
+          }),
+        );
+
+        return place;
+      }),
+    );
 
     return Res.successPaginated(res, result, Math.ceil(count / limit));
   }
@@ -251,33 +269,38 @@ export namespace PlacesService {
    */
   export async function getTrendingPlaces(req: Request, res: Response) {
     // try to make in prisma functions
-    const result = (await prisma.$queryRaw`
-      SELECT
-          p.*,
-          COUNT(uvp."userId")::integer AS visitors
-      FROM
-          public."Place" p
-      JOIN
-          public."UserVisitedPlaces" uvp
-      ON
-          p."id" = uvp."placeId"
-      WHERE
-          uvp."createdAt" > NOW() - INTERVAL '14 days'
-      GROUP BY
-          p."id"
-      ORDER BY
-          visitors DESC
+    let result = (await prisma.$queryRaw`
+      SELECT p.*,
+            array_to_json(array_agg(DISTINCT I."fileName")) as images,
+            COUNT(uvp."userId")::integer                    AS visitors
+      FROM public."Place" p
+              JOIN public."UserVisitedPlaces" uvp ON p."id" = uvp."placeId"
+              JOIN public."Image" I on p.id = I."placeId"
+      WHERE uvp."createdAt" > NOW() - INTERVAL '14 days'
+      GROUP BY p."id", p.name
+      ORDER BY visitors DESC
       LIMIT 10;
     `) as Place[];
 
     // remove qr_identifier, latitude and longitude from the result
-    result.forEach((place) => {
-      delete place.qr_identifier;
-      delete place.latitude;
-      delete place.longitude;
-    });
+    result = await Promise.all(
+      result.map(async (place) => {
+        delete place.qr_identifier;
+        delete place.latitude;
+        delete place.longitude;
+        place.images = await Promise.all(
+          place.images.map(async (image) => {
+            const data = await readFile(`public/images/${image}`);
+            return {
+              fileName: image,
+              data: data.toString('base64'),
+            };
+          }),
+        );
 
-    console.log(result);
+        return place;
+      }),
+    );
 
     return Res.success(res, result);
   }
