@@ -324,7 +324,6 @@ export namespace PlacesService {
         id: true,
         name: true,
         description: true,
-        qrIdentifier: true,
         latitude: true,
         longitude: true,
         createdAt: true,
