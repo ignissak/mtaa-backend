@@ -255,7 +255,7 @@ export namespace PlacesService {
           place.images.map(async (image) => {
             const data = await readFile(`public/images/${image}`);
             return {
-              fileName: image,
+              fileName: image.fileName,
               data: data.toString('base64'),
             };
           }),
@@ -297,7 +297,7 @@ export namespace PlacesService {
           place.images.map(async (image) => {
             const data = await readFile(`public/images/${image}`);
             return {
-              fileName: image,
+              fileName: image.fileName,
               data: data.toString('base64'),
             };
           }),
@@ -308,6 +308,50 @@ export namespace PlacesService {
     );
 
     return Res.success(res, result);
+  }
+
+  export async function getPlace(req: Request, res: Response) {
+    const placeId = parseInt(req.params.placeId);
+    if (!placeId) {
+      return Res.property_required(res, 'placeId');
+    }
+
+    const place = await prisma.place.findFirst({
+      where: {
+        id: placeId,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        qrIdentifier: true,
+        latitude: true,
+        longitude: true,
+        createdAt: true,
+        updatedAt: true,
+        images: {
+          select: {
+            fileName: true,
+          },
+        },
+      },
+    });
+
+    if (!place) {
+      return Res.not_found(res);
+    }
+
+    place.images = await Promise.all(
+      place.images.map(async (image) => {
+        const data = await readFile(`public/images/${image.fileName}`);
+        return {
+          fileName: image.fileName,
+          data: data.toString('base64'),
+        };
+      }),
+    );
+
+    return Res.success(res, place);
   }
 
   /* Reviews */
