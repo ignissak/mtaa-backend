@@ -19,6 +19,8 @@ class PlacesRoutes {
       PlacesService.getTrendingPlaces,
     );
 
+    this.router.get('/:placeId', AuthService.requireLogin, PlacesService.getPlace);
+
     this.router.get(
       '/visits/:userId',
       AuthService.requireLogin,
