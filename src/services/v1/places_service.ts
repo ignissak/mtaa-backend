@@ -370,6 +370,16 @@ export namespace PlacesService {
       return Res.bad_request(res, 'Invalid page or limit');
     }
 
+    const exists = await prisma.place.findFirst({
+      where: {
+        id: placeId,
+      },
+    });
+
+    if (!exists) {
+      return Res.not_found(res);
+    }
+
     const count = await prisma.review.count({
       where: {
         placeId: placeId,
