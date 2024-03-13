@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
+import { JwtPayload, sign, verify } from 'jsonwebtoken';
 import prisma from '../../db';
 import { Res } from '../../utils/res';
 
@@ -35,8 +36,12 @@ export namespace AuthService {
       },
     });
 
-    req.session.userId = newUser.id;
-    return Res.created(res, { id: newUser.id, email: newUser.email });
+    const access_token = await generateAccessToken(newUser.id);
+    return Res.created(res, {
+      id: newUser.id,
+      email: newUser.email,
+      access_token,
+    });
   }
 
   export async function login(req: Request, res: Response) {
@@ -63,17 +68,8 @@ export namespace AuthService {
       return Res.unauthorized(res);
     }
 
-    req.session.userId = user.id;
-    return Res.success(res, { id: user.id, email: user.email });
-  }
-
-  export async function logOut(req: Request, res: Response) {
-    req.session.destroy((err) => {
-      if (err) {
-        return Res.error(res, err);
-      }
-      return Res.success(res, {});
-    });
+    const access_token = await generateAccessToken(user.id);
+    return Res.success(res, { access_token });
   }
 
   export async function requireLogin(
@@ -81,9 +77,47 @@ export namespace AuthService {
     res: Response,
     next: NextFunction,
   ) {
-    if (!req.session.userId) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
       return Res.unauthorized(res);
     }
-    next();
+
+    try {
+      const decoded = await verifyAccessToken(token);
+      if (!decoded) {
+        return Res.unauthorized(res);
+      }
+
+      req.auth = decoded as { userId: number };
+      next();
+    } catch (error) {
+      return Res.unauthorized(res);
+    }
+  }
+
+  async function verifyAccessToken(token: string) {
+    return new Promise<JwtPayload | undefined>((resolve, reject) => {
+      verify(token, process.env.SECRET as string, (err, decoded) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(decoded as JwtPayload);
+      });
+    });
+  }
+
+  export async function generateAccessToken(userId: number) {
+    return sign(
+      {
+        userId,
+      },
+      process.env.SECRET as string,
+      {
+        expiresIn: '100 years',
+        algorithm: 'HS256',
+      },
+    );
   }
 }

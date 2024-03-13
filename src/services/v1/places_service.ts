@@ -38,7 +38,7 @@ export namespace PlacesService {
     let userId: number | undefined = parseInt(req.params.userId);
     // if userId is not provided, get the user id from the request
     if (!userId) {
-      userId = req.session.userId;
+      userId = req.auth?.userId;
     }
     if (!userId) {
       // just in case, should happen tho
@@ -76,7 +76,7 @@ export namespace PlacesService {
       return Res.property_required(res, 'placeId');
     }
 
-    const userId = req.session.userId;
+    const userId = req.auth?.userId;
     if (!userId) {
       return Res.unauthorized(res);
     }
@@ -121,7 +121,7 @@ export namespace PlacesService {
       return Res.property_required(res, 'placeId');
     }
 
-    const userId = req.session.userId;
+    const userId = req.auth?.userId;
     if (!userId) {
       return Res.unauthorized(res);
     }
@@ -445,7 +445,7 @@ export namespace PlacesService {
       return Res.property_required(res, 'placeId');
     }
 
-    const userId = req.session.userId;
+    const userId = req.auth?.userId;
     if (!userId) {
       return Res.unauthorized(res);
     }
@@ -508,7 +508,7 @@ export namespace PlacesService {
       return Res.property_required(res, 'placeId');
     }
 
-    const userId = req.session.userId;
+    const userId = req.auth?.userId;
     if (!userId) {
       return Res.unauthorized(res);
     }

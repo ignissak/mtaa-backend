@@ -5,7 +5,7 @@ export namespace IndexService {
   export async function getPackageVersion(req: Request, res: Response) {
     return Res.success(res, {
       version: process.env.npm_package_version,
-      userId: req.session.userId,
+      userId: req.auth?.userId,
     });
   }
 }
