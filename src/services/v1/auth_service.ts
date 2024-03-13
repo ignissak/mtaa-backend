@@ -97,7 +97,7 @@ export namespace AuthService {
     }
   }
 
-  async function verifyAccessToken(token: string) {
+  export async function verifyAccessToken(token: string) {
     return new Promise<JwtPayload | undefined>((resolve, reject) => {
       verify(token, process.env.SECRET as string, (err, decoded) => {
         if (err) {
