@@ -12,7 +12,7 @@ class AuthRoutes {
   public init() {
     this.router.post('/login', AuthService.login);
     this.router.post('/register', AuthService.register);
-    this.router.get('/logout', AuthService.logOut);
+    //this.router.get('/logout', AuthService.logOut);
     this.router.get(
       '/protected',
       AuthService.requireLogin,
