@@ -79,8 +79,8 @@ export namespace Res {
 
   export function unauthorized(res: Response) {
     return res
-      .status(403)
-      .json({ status: 403, success: false, error: 'Unauthorized!', data: [] });
+      .status(401)
+      .json({ status: 401, success: false, error: 'Unauthorized!', data: [] });
   }
 
   export function conflict(res: Response) {
