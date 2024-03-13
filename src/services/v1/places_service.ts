@@ -45,6 +45,27 @@ export namespace PlacesService {
       return Res.unauthorized(res);
     }
 
+    const exists = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+      select: {
+        settings: {
+          select: {
+            visitedPublic: true,
+          },
+        },
+      },
+    });
+
+    if (!exists) {
+      return Res.not_found(res);
+    }
+
+    if (!exists.settings?.visitedPublic) {
+      return Res.forbidden(res, 'User has disabled public visits');
+    }
+
     // get the user's visited places
     const visitedPlaces = await prisma.userVisitedPlaces.findMany({
       where: {
