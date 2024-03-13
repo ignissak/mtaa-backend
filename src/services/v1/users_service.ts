@@ -6,7 +6,7 @@ import { Res } from '../../utils/res';
 export namespace UsersService {
   export async function updateSettings(req: Request, res: Response) {
     const { darkMode, visitedPublic, language } = req.body;
-    const userId = req.session.userId;
+    const userId = req.auth?.userId;
 
     if (!userId) {
       return Res.unauthorized(res);
@@ -54,7 +54,7 @@ export namespace UsersService {
 
   export async function updatePassword(req: Request, res: Response) {
     let { oldPassword, newPassword } = req.body;
-    const userId = req.session.userId;
+    const userId = req.auth?.userId;
 
     if (!userId) {
       return Res.unauthorized(res);
