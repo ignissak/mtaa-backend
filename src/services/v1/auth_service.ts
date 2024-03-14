@@ -69,7 +69,7 @@ export namespace AuthService {
     }
 
     const access_token = await generateAccessToken(user.id);
-    return Res.success(res, { access_token });
+    return Res.success(res, { access_token, userId: user.id });
   }
 
   export async function requireLogin(

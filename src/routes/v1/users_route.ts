@@ -21,6 +21,7 @@ class UsersRoutes {
       AuthService.requireLogin,
       UsersService.updatePassword,
     );
+    this.router.get('/:userId', AuthService.requireLogin, UsersService.getUser);
   }
 }
 

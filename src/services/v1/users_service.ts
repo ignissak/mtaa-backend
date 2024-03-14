@@ -88,4 +88,36 @@ export namespace UsersService {
 
     return Res.success(res, { id: userId });
   }
+
+  export async function getUser(req: Request, res: Response) {
+    const userId = req.params.userId;
+
+    if (!userId) {
+      return Res.property_required(res, 'userId');
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: parseInt(userId),
+      },
+      select: {
+        id: true,
+        name: true,
+        points: true,
+        settings: {
+          select: {
+            darkMode: true,
+            visitedPublic: true,
+            language: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      return Res.not_found(res);
+    }
+
+    return Res.success(res, user);
+  }
 }
