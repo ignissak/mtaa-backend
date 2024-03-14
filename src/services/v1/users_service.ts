@@ -53,7 +53,8 @@ export namespace UsersService {
   }
 
   export async function updatePassword(req: Request, res: Response) {
-    let { oldPassword, newPassword } = req.body;
+    let { newPassword } = req.body;
+    const { oldPassword } = req.body;
     const userId = req.auth?.userId;
 
     if (!userId) {
