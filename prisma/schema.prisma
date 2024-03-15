@@ -33,15 +33,21 @@ enum Language {
   SK_SK
 }
 
+enum Appearance {
+  LIGHT_MODE
+  DARK_MODE
+  SYSTEM
+}
+
 model UserSettings {
   id Int @id @default(autoincrement())
 
   user   User @relation(fields: [userId], references: [id])
   userId Int  @unique
 
-  darkMode      Boolean  @default(false)
-  visitedPublic Boolean  @default(true)
-  language      Language @default(EN_GB)
+  appearance    Appearance @default(SYSTEM)
+  visitedPublic Boolean    @default(true)
+  language      Language   @default(EN_GB)
 }
 
 enum PlaceType {
