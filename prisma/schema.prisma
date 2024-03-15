@@ -28,15 +28,20 @@ model User {
   @@index([email, points])
 }
 
+enum Language {
+  EN_GB
+  SK_SK
+}
+
 model UserSettings {
   id Int @id @default(autoincrement())
 
   user   User @relation(fields: [userId], references: [id])
   userId Int  @unique
 
-  darkMode      Boolean @default(false)
-  visitedPublic Boolean @default(true)
-  language      String  @default("en-GB")
+  darkMode      Boolean  @default(false)
+  visitedPublic Boolean  @default(true)
+  language      Language @default(EN_GB)
 }
 
 enum PlaceType {
