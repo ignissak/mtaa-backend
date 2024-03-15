@@ -114,6 +114,10 @@ export namespace UsersService {
       return Res.property_required(res, 'userId');
     }
 
+    if (isNaN(parseInt(userId))) {
+      return Res.bad_request(res, 'userId must be a number');
+    }
+
     const user = await prisma.user.findUnique({
       where: {
         id: parseInt(userId),
