@@ -124,7 +124,7 @@ export namespace UsersService {
         points: true,
         settings: {
           select: {
-            darkMode: true,
+            appearance: true,
             visitedPublic: true,
             language: true,
           },
