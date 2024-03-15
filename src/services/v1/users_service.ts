@@ -5,7 +5,7 @@ import { Res } from '../../utils/res';
 
 export namespace UsersService {
   export async function updateSettings(req: Request, res: Response) {
-    const { darkMode, visitedPublic, language } = req.body;
+    const { appearance, visitedPublic, language } = req.body;
     const userId = req.auth?.userId;
 
     if (!userId) {
@@ -13,15 +13,32 @@ export namespace UsersService {
     }
 
     if (
-      darkMode === undefined ||
+      appearance === undefined ||
       visitedPublic === undefined ||
       language === undefined
     ) {
       return Res.properties_required(res, [
-        'darkMode',
+        'appearance',
         'visitedPublic',
         'language',
       ]);
+    }
+
+    // validate
+    if (
+      appearance.toUpperCase() !== 'LIGHT_MODE' &&
+      appearance.toUpperCase() !== 'DARK_MODE' &&
+      appearance.toUpperCase() !== 'SYSTEM'
+    ) {
+      return Res.bad_request(res, 'appareance must be a valid value');
+    }
+
+    if (typeof visitedPublic !== 'boolean') {
+      return Res.bad_request(res, 'visitedPublic must be a boolean');
+    }
+
+    if (language !== 'en-GB' && language !== 'sk-SK') {
+      return Res.bad_request(res, 'language must be a valid value');
     }
 
     const user = await prisma.user.update({
@@ -31,7 +48,7 @@ export namespace UsersService {
       data: {
         settings: {
           update: {
-            darkMode: darkMode,
+            appearance: appearance.toUpperCase(),
             visitedPublic: visitedPublic,
             language: language.toUpperCase().replace('-', '_'),
           },
@@ -41,7 +58,7 @@ export namespace UsersService {
         id: true,
         settings: {
           select: {
-            darkMode: true,
+            appearance: true,
             visitedPublic: true,
             language: true,
           },
