@@ -16,9 +16,7 @@ class AuthRoutes {
     this.router.get(
       '/protected',
       AuthService.requireLogin,
-      async (req, res) => {
-        res.status(200).send('You are logged in');
-      },
+      AuthService.checkLogin,
     );
   }
 }

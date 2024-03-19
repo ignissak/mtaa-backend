@@ -72,6 +72,29 @@ export namespace AuthService {
     return Res.success(res, { access_token, userId: user.id });
   }
 
+  export async function checkLogin(req: Request, res: Response) {
+    const userId = req.auth?.userId;
+
+    if (!userId) {
+      return Res.unauthorized(res);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      return Res.unauthorized(res);
+    }
+
+    return Res.success(res, {
+      id: user.id,
+      email: user.email,
+    });
+  }
+
   export async function requireLogin(
     req: Request,
     res: Response,
