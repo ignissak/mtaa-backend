@@ -37,7 +37,10 @@ export namespace UsersService {
       return Res.bad_request(res, 'visitedPublic must be a boolean');
     }
 
-    if (language !== 'en-GB' && language !== 'sk-SK') {
+    if (
+      language.toLowerCase().replace('_', '-') !== 'en-gb' &&
+      language.toLowerCase().replace('_', '-') !== 'sk-sk'
+    ) {
       return Res.bad_request(res, 'language must be a valid value');
     }
 
