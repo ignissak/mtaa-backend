@@ -5,7 +5,7 @@ import { Res } from '../../utils/res';
 
 export namespace UsersService {
   export async function updateSettings(req: Request, res: Response) {
-    const { appearance, visitedPublic, language } = req.body;
+    const { appearance, visitedPublic, language, name } = req.body;
     const userId = req.auth?.userId;
 
     if (!userId) {
@@ -15,12 +15,14 @@ export namespace UsersService {
     if (
       appearance === undefined ||
       visitedPublic === undefined ||
-      language === undefined
+      language === undefined ||
+      name === undefined
     ) {
       return Res.properties_required(res, [
         'appearance',
         'visitedPublic',
         'language',
+        'name',
       ]);
     }
 
@@ -44,11 +46,16 @@ export namespace UsersService {
       return Res.bad_request(res, 'language must be a valid value');
     }
 
+    if (name.length < 3 || name.length > 20) {
+      return Res.bad_request(res, 'name must be between 3 and 20 characters');
+    }
+
     const user = await prisma.user.update({
       where: {
         id: userId,
       },
       data: {
+        name: name,
         settings: {
           update: {
             appearance: appearance.toUpperCase(),
@@ -59,6 +66,7 @@ export namespace UsersService {
       },
       select: {
         id: true,
+        name: true,
         settings: {
           select: {
             appearance: true,
