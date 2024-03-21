@@ -220,9 +220,12 @@ export namespace PlacesService {
    * GET /places?page=1&limit=10
    */
   export async function searchPlaces(req: Request, res: Response) {
-    const { latitude, longitude, query, type } = req.body;
+    const { query, type } = req.query;
+    const latitude = parseFloat(req.query.latitude as string);
+    const longitude = parseFloat(req.query.longitude as string);
     const limit = parseInt(req.query.limit as string) || 10;
     const page = parseInt(req.query.page as string) || 1;
+    console.log(req.query);
     if (!latitude || !longitude) {
       return Res.properties_required(res, ['latitude', 'longitude']);
     }
@@ -349,6 +352,7 @@ export namespace PlacesService {
         longitude: true,
         createdAt: true,
         updatedAt: true,
+        points: true,
         images: {
           select: {
             fileName: true,
