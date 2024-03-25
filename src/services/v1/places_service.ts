@@ -579,7 +579,7 @@ export namespace PlacesService {
         },
       },
     });
-    
+
     sockets.emitPlaceUpdate(placeId);
 
     return Res.success(res, deleted);
