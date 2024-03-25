@@ -4,6 +4,7 @@ import { readFile } from 'fs/promises';
 import prisma from '../../db';
 import { GPS } from '../../utils/gps';
 import { Res } from '../../utils/res';
+import { sockets } from '../..';
 
 type Image = {
   fileName: string;
@@ -129,6 +130,8 @@ export namespace PlacesService {
       },
     });
 
+    sockets.emitPlaceUpdate(placeId);
+
     return Res.success(res, deleted);
   }
 
@@ -212,6 +215,8 @@ export namespace PlacesService {
         placeId: placeId,
       },
     });
+
+    sockets.emitPlaceUpdate(placeId);
 
     return Res.success(res, newVisitedPlace);
   }
@@ -531,6 +536,8 @@ export namespace PlacesService {
       },
     });
 
+    sockets.emitPlaceUpdate(placeId);
+
     return Res.success(res, review);
   }
 
@@ -573,7 +580,42 @@ export namespace PlacesService {
         },
       },
     });
+    
+    sockets.emitPlaceUpdate(placeId);
 
     return Res.success(res, deleted);
+  }
+
+  export async function getPlaceVisits(placeId: number) {
+    const count = await prisma.userVisitedPlaces.count({
+      where: {
+        placeId: placeId,
+      },
+    });
+
+    return count;
+  }
+
+  export async function getPlaceAverageRating(placeId: number) {
+    const sumOfRatings = await prisma.review.aggregate({
+      where: {
+        placeId: placeId,
+      },
+      _sum: {
+        rating: true,
+      },
+    });
+
+    const countOfReviews = await prisma.review.count({
+      where: {
+        placeId: placeId,
+      },
+    });
+
+    if (!sumOfRatings._sum.rating || !countOfReviews) {
+      return 0;
+    }
+
+    return sumOfRatings._sum.rating / countOfReviews;
   }
 }
