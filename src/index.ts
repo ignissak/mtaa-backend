@@ -23,7 +23,7 @@ const formatEndpoint = (
   return `${methods.join(', ')} \t: ${path} [${middlewares.join(', ')}]`;
 };
 
-const io = new Server(server);
+const io = new Server(server, { cors: { origin: 'http://localhost' } });
 const sockets = new Sockets(io);
 
 server.listen(3000, '0.0.0.0', () => {

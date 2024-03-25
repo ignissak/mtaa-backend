@@ -11,7 +11,7 @@ class PlacesRoutes {
     this.init();
   }
 
-  public init() {
+  private init() {
     this.router.get('', AuthService.requireLogin, PlacesService.searchPlaces);
     this.router.get(
       '/trending',
@@ -61,6 +61,5 @@ class PlacesRoutes {
 }
 
 const placesRoutes = new PlacesRoutes();
-placesRoutes.init();
 
 export default placesRoutes.router;

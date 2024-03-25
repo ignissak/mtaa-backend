@@ -9,12 +9,11 @@ class IndexRoutes {
     this.init();
   }
 
-  public init() {
+  private init() {
     this.router.get('/', IndexService.getPackageVersion);
   }
 }
 
 const indexRoutes = new IndexRoutes();
-indexRoutes.init();
 
 export default indexRoutes.router;

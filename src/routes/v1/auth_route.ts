@@ -9,7 +9,7 @@ class AuthRoutes {
     this.init();
   }
 
-  public init() {
+  private init() {
     this.router.post('/login', AuthService.login);
     this.router.post('/register', AuthService.register);
     //this.router.get('/logout', AuthService.logOut);
@@ -22,6 +22,5 @@ class AuthRoutes {
 }
 
 const authRoutes = new AuthRoutes();
-authRoutes.init();
 
 export default authRoutes.router;
