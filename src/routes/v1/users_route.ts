@@ -10,7 +10,7 @@ class UsersRoutes {
     this.init();
   }
 
-  public init() {
+  private init() {
     this.router.post(
       '/settings',
       AuthService.requireLogin,
@@ -26,6 +26,5 @@ class UsersRoutes {
 }
 
 const usersRoutes = new UsersRoutes();
-usersRoutes.init();
 
 export default usersRoutes.router;

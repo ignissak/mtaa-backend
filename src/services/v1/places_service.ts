@@ -230,7 +230,6 @@ export namespace PlacesService {
     const longitude = parseFloat(req.query.longitude as string);
     const limit = parseInt(req.query.limit as string) || 10;
     const page = parseInt(req.query.page as string) || 1;
-    console.log(req.query);
     if (!latitude || !longitude) {
       return Res.properties_required(res, ['latitude', 'longitude']);
     }
@@ -580,7 +579,7 @@ export namespace PlacesService {
         },
       },
     });
-    
+
     sockets.emitPlaceUpdate(placeId);
 
     return Res.success(res, deleted);

@@ -14,7 +14,8 @@ export default class Sockets {
     this.io.use(async (socket, next) => {
       try {
         // Add authentication here
-        const token = socket.handshake.headers.token;
+        const token =
+          socket.handshake.auth.token || socket.handshake.headers.token;
         if (!token) {
           return next(new Error('Authentication error'));
         }
