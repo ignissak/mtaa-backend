@@ -357,6 +357,7 @@ export namespace PlacesService {
         createdAt: true,
         updatedAt: true,
         points: true,
+        type: true,
         images: {
           select: {
             fileName: true,
