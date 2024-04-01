@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
 import { readFile } from 'fs/promises';
+import { sockets } from '../..';
 import prisma from '../../db';
 import { GPS } from '../../utils/gps';
 import { Res } from '../../utils/res';
-import { sockets } from '../..';
 import { removeAccents } from '../../utils/utils';
 
 type Image = {
@@ -227,6 +227,7 @@ export namespace PlacesService {
    */
   export async function searchPlaces(req: Request, res: Response) {
     let { query, type } = req.query;
+    const { region } = req.query;
     const latitude = parseFloat(req.query.latitude as string);
     const longitude = parseFloat(req.query.longitude as string);
     const limit = parseInt(req.query.limit as string) || 10;
@@ -246,13 +247,20 @@ export namespace PlacesService {
       );
     }
     if (type) {
-      searchConditions.push(Prisma.sql`(p.type::text = UPPER(${type}))`);
+      type = (type as string).toUpperCase().split(';');
+      searchConditions.push(
+        Prisma.sql`(p.type::text IN (${Prisma.join(type)}))`,
+      );
+    }
+    if (region) {
+      searchConditions.push(Prisma.sql`(p.region::text = UPPER(${region}))`);
     }
     const where =
       searchConditions.length > 0
         ? Prisma.sql`WHERE ${Prisma.join(searchConditions, ' AND ')}`
         : Prisma.empty;
 
+    console.log(where);
     let result = (await prisma.$queryRaw`
       SELECT
           p.*,
