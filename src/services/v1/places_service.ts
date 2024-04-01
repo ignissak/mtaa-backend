@@ -5,6 +5,7 @@ import prisma from '../../db';
 import { GPS } from '../../utils/gps';
 import { Res } from '../../utils/res';
 import { sockets } from '../..';
+import { removeAccents } from '../../utils/utils';
 
 type Image = {
   fileName: string;
@@ -225,7 +226,7 @@ export namespace PlacesService {
    * GET /places?page=1&limit=10
    */
   export async function searchPlaces(req: Request, res: Response) {
-    const { query, type } = req.query;
+    let { query, type } = req.query;
     const latitude = parseFloat(req.query.latitude as string);
     const longitude = parseFloat(req.query.longitude as string);
     const limit = parseInt(req.query.limit as string) || 10;
@@ -238,8 +239,9 @@ export namespace PlacesService {
 
     const searchConditions: Prisma.Sql[] = [];
     if (query) {
+      query = removeAccents(query as string);
       searchConditions.push(
-        Prisma.sql`(p.name ILIKE CONCAT('%', ${query}, '%') OR p.description ILIKE CONCAT('%', ${query}, '%'))`,
+        Prisma.sql`(public.unaccent(p.name) ILIKE CONCAT('%', ${query}, '%') OR public.unaccent(p.description) ILIKE CONCAT('%', ${query}, '%'))`,
         // for some reason we cant use '%query%' https://github.com/prisma/prisma/discussions/20568
       );
     }
