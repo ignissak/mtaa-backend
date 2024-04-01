@@ -262,7 +262,6 @@ export namespace PlacesService {
         ? Prisma.sql`WHERE ${Prisma.join(searchConditions, ' AND ')}`
         : Prisma.empty;
 
-    console.log(where);
     let result = (await prisma.$queryRaw`
       SELECT
           p.*,
