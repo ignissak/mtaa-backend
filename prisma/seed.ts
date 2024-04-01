@@ -13,7 +13,7 @@ async function main() {
       latitude: 48.14221557240078,
       longitude: 17.10021103662275,
       points: 10,
-      type: 'CASTLE',
+      type: 'CASTLES',
       images: {
         createMany: {
           data: [
@@ -115,7 +115,7 @@ async function main() {
       latitude: 48.158071300776406,
       longitude: 17.09067060514125,
       points: 5,
-      type: 'PARK',
+      type: 'PARKS_AND_GARDENS',
       images: {
         create: {
           fileName: 'horsky_park.jpg',
