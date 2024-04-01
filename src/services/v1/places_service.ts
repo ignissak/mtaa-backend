@@ -226,8 +226,7 @@ export namespace PlacesService {
    * GET /places?page=1&limit=10
    */
   export async function searchPlaces(req: Request, res: Response) {
-    let { query, type } = req.query;
-    const { region } = req.query;
+    let { query, type, region } = req.query;
     const latitude = parseFloat(req.query.latitude as string);
     const longitude = parseFloat(req.query.longitude as string);
     const limit = parseInt(req.query.limit as string) || 10;
@@ -253,7 +252,10 @@ export namespace PlacesService {
       );
     }
     if (region) {
-      searchConditions.push(Prisma.sql`(p.region::text = UPPER(${region}))`);
+      region = (region as string).toUpperCase().split(';');
+      searchConditions.push(
+        Prisma.sql`(p.region::text IN (${Prisma.join(region)}))`,
+      );
     }
     const where =
       searchConditions.length > 0
