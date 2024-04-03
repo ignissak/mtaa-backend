@@ -104,7 +104,7 @@ model Place {
   reviews   Review[]
   links     ExternalLink[]
 
-  @@index([latitude, longitude, name])
+  @@index([latitude, longitude, name, description, qrIdentifier, type, region])
 }
 
 model UserVisitedPlaces {

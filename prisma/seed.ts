@@ -162,6 +162,32 @@ async function main() {
     },
   });
 
+  const fiit = await prisma.place.upsert({
+    where: { name: 'Fakulta informatiky a informačných technológií, STU' },
+    update: {},
+    create: {
+      name: 'Fakulta informatiky a informačných technológií, STU',
+      description:
+        'Fakulta informatiky a informačných technológií Slovenskej technickej univerzity v Bratislave je jednou z deviatich fakúlt STU. ',
+      latitude: 48.15341291250886,
+      longitude: 17.071555648227264,
+      points: 5,
+      type: 'OTHER',
+      images: {
+        createMany: {
+          data: [
+            {
+              fileName: 'fiit-1.jpg',
+            },
+            {
+              fileName: 'fiit-2.jpg',
+            },
+          ],
+        },
+      },
+    },
+  });
+
   const alice = await prisma.user.upsert({
     where: { email: 'alice@example.com' },
     update: {},
