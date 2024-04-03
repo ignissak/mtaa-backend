@@ -188,6 +188,32 @@ async function main() {
     },
   });
 
+  const mladost = await prisma.place.upsert({
+    where: { name: 'ŠD Mladosť' },
+    update: {},
+    create: {
+      name: 'ŠD Mladosť',
+      description:
+        'Študentský domov Mladosť je vysokoškolský internát v Mlynskej doline v Bratislave patriaci medzi účelové zariadenia Slovenskej technickej univerzity v Bratislave. Nachádza sa na ulici Staré grunty v blízkosti internátov Ľ. Štúra patriacich Univerzite Komenského. Je súčasťou jedného z najväčších komplexov študentských internátov v Strednej Európe, v ktorom počas školského roka býva okolo 10 000 študentov, čo je porovnateľné s populáciou menšieho slovenského mesta, napríklad Stupavy. ',
+      latitude: 48.15859423595599,
+      longitude: 17.06427278896531,
+      points: 5,
+      type: 'OTHER',
+      images: {
+        createMany: {
+          data: [
+            {
+              fileName: 'mladost-1.jpg',
+            },
+            {
+              fileName: 'mladost-2.jpg',
+            },
+          ],
+        },
+      },
+    },
+  });
+
   const alice = await prisma.user.upsert({
     where: { email: 'alice@example.com' },
     update: {},
