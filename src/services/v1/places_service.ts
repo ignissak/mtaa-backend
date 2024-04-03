@@ -36,6 +36,7 @@ export namespace PlacesService {
     if (page < 1 || limit < 1) {
       return Res.bad_request(res, 'Invalid page or limit');
     }
+    const placeId = parseInt(req.query.placeId as string);
 
     let userId: number | undefined = parseInt(req.params.userId);
     // if userId is not provided, get the user id from the request
@@ -68,11 +69,16 @@ export namespace PlacesService {
       return Res.forbidden(res, 'User has disabled public visits');
     }
 
+    let where;
+    if (isNaN(placeId)) {
+      where = { userId: userId };
+    } else {
+      where = { AND: [{ userId: userId }, { placeId: placeId }] };
+    }
+
     // get the user's visited places
     const visitedPlaces = await prisma.userVisitedPlaces.findMany({
-      where: {
-        userId: userId,
-      },
+      where: where,
       take: limit,
       skip: (page - 1) * limit,
       orderBy: {
