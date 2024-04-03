@@ -235,8 +235,6 @@ export namespace PlacesService {
       return Res.properties_required(res, ['latitude', 'longitude']);
     }
 
-    const count = await prisma.place.count();
-
     const searchConditions: Prisma.Sql[] = [];
     if (query) {
       query = removeAccents(query as string);
@@ -271,7 +269,8 @@ export namespace PlacesService {
               POWER(SIN(RADIANS((p.latitude - ${latitude}) / 2)), 2) +
               COS(RADIANS(${latitude})) * COS(RADIANS(p.latitude)) *
               POWER(SIN(RADIANS((p.longitude - ${longitude}) / 2)), 2)
-          )) AS distance
+          )) AS distance,
+          (COUNT(p.id) OVER())::integer AS total
       FROM
           public."Place" p
       JOIN public."Image" image on p.id = image."placeId"
@@ -282,7 +281,9 @@ export namespace PlacesService {
           distance
       LIMIT ${limit}
       OFFSET ${(page - 1) * limit};
-    `) as Place[];
+    `) as (Place & { total?: number })[];
+
+    const count = result[0]?.total || 0;
 
     // remove qr_identifier, latitude and longitude from the result
     result = await Promise.all(
