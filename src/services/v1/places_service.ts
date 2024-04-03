@@ -288,8 +288,6 @@ export namespace PlacesService {
     result = await Promise.all(
       result.map(async (place) => {
         delete place.qr_identifier;
-        delete place.latitude;
-        delete place.longitude;
         place.images = await Promise.all(
           place.images.map(async (image) => {
             const data = await readFile(`public/images/${image}`);
@@ -330,8 +328,6 @@ export namespace PlacesService {
     result = await Promise.all(
       result.map(async (place) => {
         delete place.qr_identifier;
-        delete place.latitude;
-        delete place.longitude;
         place.images = await Promise.all(
           place.images.map(async (image) => {
             const data = await readFile(`public/images/${image}`);
