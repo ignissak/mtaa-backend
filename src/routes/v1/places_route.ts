@@ -36,7 +36,7 @@ class PlacesRoutes {
       PlacesService.deleteVisitedPlace,
     );
     this.router.post(
-      '/visits/:placeId',
+      '/visits',
       AuthService.requireLogin,
       PlacesService.addVisitedPlace,
     );

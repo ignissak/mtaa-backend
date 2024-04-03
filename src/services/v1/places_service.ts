@@ -32,7 +32,7 @@ export namespace PlacesService {
    */
   export async function getUserVisitedPlaces(req: Request, res: Response) {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
+    const limit = parseInt(req.query.limit as string) || 20;
     if (page < 1 || limit < 1) {
       return Res.bad_request(res, 'Invalid page or limit');
     }
@@ -141,11 +141,6 @@ export namespace PlacesService {
    * body should contain gps coordinates and qr code data
    */
   export async function addVisitedPlace(req: Request, res: Response) {
-    const placeId = parseInt(req.params.placeId);
-    if (!placeId) {
-      return Res.property_required(res, 'placeId');
-    }
-
     const userId = req.auth?.userId;
     if (!userId) {
       return Res.unauthorized(res);
@@ -161,14 +156,7 @@ export namespace PlacesService {
     // find the place by qrData
     const place = await prisma.place.findFirst({
       where: {
-        AND: [
-          {
-            qrIdentifier: qrData,
-          },
-          {
-            id: placeId,
-          },
-        ],
+        qrIdentifier: qrData,
       },
     });
 
@@ -199,7 +187,7 @@ export namespace PlacesService {
             userId: userId,
           },
           {
-            placeId: placeId,
+            placeId: place.id,
           },
         ],
       },
@@ -213,11 +201,11 @@ export namespace PlacesService {
     const newVisitedPlace = await prisma.userVisitedPlaces.create({
       data: {
         userId: userId,
-        placeId: placeId,
+        placeId: place.id,
       },
     });
 
-    sockets.emitPlaceUpdate(placeId);
+    sockets.emitPlaceUpdate(place.id);
 
     return Res.success(res, newVisitedPlace);
   }
