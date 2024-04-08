@@ -162,7 +162,7 @@ async function main() {
     },
   });
 
-  const fiit = await prisma.place.upsert({
+  await prisma.place.upsert({
     where: { name: 'Fakulta informatiky a informačných technológií, STU' },
     update: {},
     create: {
@@ -188,7 +188,7 @@ async function main() {
     },
   });
 
-  const mladost = await prisma.place.upsert({
+  await prisma.place.upsert({
     where: { name: 'ŠD Mladosť' },
     update: {},
     create: {
