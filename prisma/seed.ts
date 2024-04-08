@@ -14,6 +14,7 @@ async function main() {
       longitude: 17.10021103662275,
       points: 10,
       type: 'CASTLES',
+      region: 'BRATISLAVA',
       images: {
         createMany: {
           data: [

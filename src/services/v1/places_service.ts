@@ -209,6 +209,15 @@ export namespace PlacesService {
         userId: userId,
         placeId: place.id,
       },
+      select: {
+        placeId: true,
+        userId: true,
+        place: {
+          select: {
+            points: true,
+          },
+        },
+      },
     });
 
     sockets.emitPlaceUpdate(place.id);
