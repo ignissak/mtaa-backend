@@ -14,6 +14,7 @@ async function main() {
       longitude: 17.10021103662275,
       points: 10,
       type: 'CASTLES',
+      region: 'BRATISLAVA',
       images: {
         createMany: {
           data: [
@@ -39,7 +40,8 @@ async function main() {
       latitude: 48.14906814208894,
       longitude: 17.107696964087488,
       points: 5,
-      type: 'OTHER',
+      type: 'PALACES',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'presidential_palace.jpg',
@@ -58,7 +60,8 @@ async function main() {
       latitude: 48.15389840609625,
       longitude: 17.09970562184009,
       points: 10,
-      type: 'OTHER',
+      type: 'MONUMENTS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'slavin.jpg',
@@ -77,7 +80,8 @@ async function main() {
       latitude: 48.15673311620213,
       longitude: 17.075690661292583,
       points: 5,
-      type: 'OTHER',
+      type: 'ZOO',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'bratislava_zoo.jpg',
@@ -96,7 +100,8 @@ async function main() {
       latitude: 48.14217843442503,
       longitude: 17.104972961343652,
       points: 5,
-      type: 'OTHER',
+      type: 'CHURCHES',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'cathedral_martin.jpg',
@@ -116,6 +121,7 @@ async function main() {
       longitude: 17.09067060514125,
       points: 5,
       type: 'PARKS_AND_GARDENS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'horsky_park.jpg',
@@ -134,7 +140,8 @@ async function main() {
       latitude: 48.161626645219236,
       longitude: 17.03530026392443,
       points: 10,
-      type: 'OTHER',
+      type: 'MOUNTAINS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'kralova_hola.jpg',
@@ -153,7 +160,8 @@ async function main() {
       latitude: 48.145209683618894,
       longitude: 17.106766472415384,
       points: 5,
-      type: 'OTHER',
+      type: 'TOWERS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'michalska_brana.jpg',
@@ -162,7 +170,7 @@ async function main() {
     },
   });
 
-  const fiit = await prisma.place.upsert({
+  await prisma.place.upsert({
     where: { name: 'Fakulta informatiky a informačných technológií, STU' },
     update: {},
     create: {
@@ -173,6 +181,7 @@ async function main() {
       longitude: 17.071555648227264,
       points: 5,
       type: 'OTHER',
+      region: 'BRATISLAVA',
       images: {
         createMany: {
           data: [
@@ -181,6 +190,33 @@ async function main() {
             },
             {
               fileName: 'fiit-2.jpg',
+            },
+          ],
+        },
+      },
+    },
+  });
+
+  await prisma.place.upsert({
+    where: { name: 'ŠD Mladosť' },
+    update: {},
+    create: {
+      name: 'ŠD Mladosť',
+      description:
+        'Študentský domov Mladosť je vysokoškolský internát v Mlynskej doline v Bratislave patriaci medzi účelové zariadenia Slovenskej technickej univerzity v Bratislave. Nachádza sa na ulici Staré grunty v blízkosti internátov Ľ. Štúra patriacich Univerzite Komenského. Je súčasťou jedného z najväčších komplexov študentských internátov v Strednej Európe, v ktorom počas školského roka býva okolo 10 000 študentov, čo je porovnateľné s populáciou menšieho slovenského mesta, napríklad Stupavy. ',
+      latitude: 48.15859423595599,
+      longitude: 17.06427278896531,
+      points: 5,
+      type: 'OTHER',
+      region: 'BRATISLAVA',
+      images: {
+        createMany: {
+          data: [
+            {
+              fileName: 'mladost-1.jpg',
+            },
+            {
+              fileName: 'mladost-2.jpg',
             },
           ],
         },
