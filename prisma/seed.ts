@@ -39,7 +39,8 @@ async function main() {
       latitude: 48.14906814208894,
       longitude: 17.107696964087488,
       points: 5,
-      type: 'OTHER',
+      type: 'PALACES',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'presidential_palace.jpg',
@@ -58,7 +59,8 @@ async function main() {
       latitude: 48.15389840609625,
       longitude: 17.09970562184009,
       points: 10,
-      type: 'OTHER',
+      type: 'MONUMENTS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'slavin.jpg',
@@ -77,7 +79,8 @@ async function main() {
       latitude: 48.15673311620213,
       longitude: 17.075690661292583,
       points: 5,
-      type: 'OTHER',
+      type: 'ZOO',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'bratislava_zoo.jpg',
@@ -96,7 +99,8 @@ async function main() {
       latitude: 48.14217843442503,
       longitude: 17.104972961343652,
       points: 5,
-      type: 'OTHER',
+      type: 'CHURCHES',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'cathedral_martin.jpg',
@@ -116,6 +120,7 @@ async function main() {
       longitude: 17.09067060514125,
       points: 5,
       type: 'PARKS_AND_GARDENS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'horsky_park.jpg',
@@ -134,7 +139,8 @@ async function main() {
       latitude: 48.161626645219236,
       longitude: 17.03530026392443,
       points: 10,
-      type: 'OTHER',
+      type: 'MOUNTAINS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'kralova_hola.jpg',
@@ -153,7 +159,8 @@ async function main() {
       latitude: 48.145209683618894,
       longitude: 17.106766472415384,
       points: 5,
-      type: 'OTHER',
+      type: 'TOWERS',
+      region: 'BRATISLAVA',
       images: {
         create: {
           fileName: 'michalska_brana.jpg',
@@ -173,6 +180,7 @@ async function main() {
       longitude: 17.071555648227264,
       points: 5,
       type: 'OTHER',
+      region: 'BRATISLAVA',
       images: {
         createMany: {
           data: [
@@ -199,6 +207,7 @@ async function main() {
       longitude: 17.06427278896531,
       points: 5,
       type: 'OTHER',
+      region: 'BRATISLAVA',
       images: {
         createMany: {
           data: [
