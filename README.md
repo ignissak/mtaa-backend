@@ -24,7 +24,7 @@ This is the backend of the MTAA project. It is a REST API that provides data for
 
 1. Run `docker-compose up -d` to start the database
 2. Run `npx prisma migrate deploy` to run all the migrations
-<!-- TODO: Database seeding -->
+3. Run `npx prisma db seed` to seed the database with some data
 
 ### Run
 
