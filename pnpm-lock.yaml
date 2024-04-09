@@ -30,8 +30,8 @@ dependencies:
     specifier: ^8.4.1
     version: 8.4.1
   express-list-endpoints:
-    specifier: ^6.0.0
-    version: 6.0.0
+    specifier: ^7.1.0
+    version: 7.1.0
   jsonwebtoken:
     specifier: ^9.0.2
     version: 9.0.2
@@ -1142,9 +1142,9 @@ packages:
       jsonwebtoken: 9.0.2
     dev: false
 
-  /express-list-endpoints@6.0.0:
-    resolution: {integrity: sha512-1I30bSVego+AU/eSsX/bV2xrOXW5tFhsuXZp7wZd9396bAAxH7KHaAwLXQYra0Aw33xA67HmNiceGf2SOvXaLg==}
-    engines: {node: '>=10'}
+  /express-list-endpoints@7.1.0:
+    resolution: {integrity: sha512-7FyKxABfkRC0t6B6btxlAcFr0WrpPAL12MFAGhAxoIi/OyphxVQzVmyuWbcNxEApBmNzzgt2khjlqj/3wyHMMA==}
+    engines: {node: '>=18'}
     dev: false
 
   /express-unless@2.1.3:
