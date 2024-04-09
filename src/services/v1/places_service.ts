@@ -432,6 +432,13 @@ export namespace PlacesService {
         placeId: placeId,
       },
       select: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
         id: true,
         rating: true,
         comment: true,
