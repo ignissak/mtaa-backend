@@ -22,6 +22,11 @@ class UsersRoutes {
       UsersService.updatePassword,
     );
     this.router.get('/:userId', AuthService.requireLogin, UsersService.getUser);
+    this.router.get(
+      '/:userId/reviews',
+      AuthService.requireLogin,
+      UsersService.getUserReviews,
+    );
   }
 }
 
