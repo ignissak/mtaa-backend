@@ -153,4 +153,58 @@ export namespace UsersService {
 
     return Res.success(res, user);
   }
+
+  export async function getUserReviews(req: Request, res: Response) {
+    const userId = parseInt(req.params.userId);
+    if (!userId) {
+      return Res.property_required(res, 'userId');
+    }
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    if (page < 1 || limit < 1) {
+      return Res.bad_request(res, 'Invalid page or limit');
+    }
+
+    const exists = await prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!exists) {
+      return Res.not_found(res);
+    }
+
+    const count = await prisma.review.count({
+      where: {
+        userId: userId,
+      },
+    });
+
+    const reviews = await prisma.review.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        place: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+          },
+        },
+        id: true,
+        rating: true,
+        comment: true,
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return Res.successPaginated(res, reviews, Math.ceil(count / limit));
+  }
 }
