@@ -323,7 +323,100 @@ async function main() {
     },
   });
 
-  console.log({ slavin, alice, john, agnes });
+  await prisma.review.upsert({
+    where: {
+      userId_placeId: {
+        userId: alice.id,
+        placeId: bratislavaCastle.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: alice.id,
+      placeId: bratislavaCastle.id,
+      rating: 5,
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id mi condimentum, semper nulla quis, luctus sapien. Nullam viverra ex eget eros fermentum, id fermentum libero vestibulum.',
+      images: {
+        create: {
+          fileName: 'bratislava_selfie.jpg',
+        },
+      },
+    },
+  });
+
+  await prisma.review.upsert({
+    where: {
+      userId_placeId: {
+        userId: john.id,
+        placeId: bratislavaCastle.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: john.id,
+      placeId: bratislavaCastle.id,
+      rating: 4,
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id mi condimentum, semper nulla quis, luctus sapien. Nullam viverra ex eget eros fermentum, id fermentum libero vestibulum.',
+    },
+  });
+
+  await prisma.review.upsert({
+    where: {
+      userId_placeId: {
+        userId: agnes.id,
+        placeId: bratislavaCastle.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: agnes.id,
+      placeId: bratislavaCastle.id,
+      rating: 4,
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id mi condimentum, semper nulla quis, luctus sapien. Nullam viverra ex eget eros fermentum, id fermentum libero vestibulum.',
+      images: {
+        create: {
+          fileName: 'bratislava_fotka.jpg',
+        },
+      },
+    },
+  });
+
+  await prisma.review.upsert({
+    where: {
+      userId_placeId: {
+        userId: agnes.id,
+        placeId: slavin.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: agnes.id,
+      placeId: slavin.id,
+      rating: 2,
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id mi condimentum, semper nulla quis, luctus sapien. Nullam viverra ex eget eros fermentum, id fermentum libero vestibulum.',
+    },
+  });
+
+  await prisma.review.upsert({
+    where: {
+      userId_placeId: {
+        userId: agnes.id,
+        placeId: bratislavaZoo.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: agnes.id,
+      placeId: bratislavaZoo.id,
+      rating: 3,
+      comment:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id mi condimentum, semper nulla quis, luctus sapien. Nullam viverra ex eget eros fermentum, id fermentum libero vestibulum.',
+    },
+  });
 }
 
 main()
