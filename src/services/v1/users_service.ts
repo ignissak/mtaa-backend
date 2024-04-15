@@ -207,4 +207,59 @@ export namespace UsersService {
 
     return Res.successPaginated(res, reviews, Math.ceil(count / limit));
   }
+
+  export async function getTopReviewers(req: Request, res: Response) {
+    try {
+      const limit = parseInt(req.query.limit as string) || 10;
+
+      const topUsers = await prisma.review.groupBy({
+        by: ['userId'],
+        _count: {
+          userId: true,
+        },
+        orderBy: {
+          _count: {
+            userId: 'desc',
+          },
+        },
+        take: limit,
+      });
+
+      return Res.success(res, topUsers);
+    } catch (error) {
+      return Res.bad_request(res, 'Server Error');
+    }
+  }
+
+  export async function getUsersFavoritePlaces(req: Request, res: Response) {
+    try {
+      const userId = parseInt(req.params.userId);
+
+      const favoritePlaces = await prisma.review.findMany({
+        where: {
+          userId: userId,
+          rating: {
+            gt: 4,
+          },
+        },
+        select: {
+          place: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+            },
+          },
+          id: true,
+          rating: true,
+          comment: true,
+        },
+      });
+      return Res.success(res, favoritePlaces);
+    } catch (error) {
+      return Res.bad_request(res, 'Server Error');
+    }
+  }
+
+  
 }

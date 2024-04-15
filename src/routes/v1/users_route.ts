@@ -27,6 +27,16 @@ class UsersRoutes {
       AuthService.requireLogin,
       UsersService.getUserReviews,
     );
+    this.router.get(
+      '/top-reviewers',
+      AuthService.requireLogin,
+      UsersService.getTopReviewers,
+    );
+    this.router.get(
+      '/users/:userId/stats',
+      AuthService.requireLogin,
+      UsersService.getUsersFavoritePlaces,
+    );
   }
 }
 

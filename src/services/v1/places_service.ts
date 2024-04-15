@@ -636,4 +636,63 @@ export namespace PlacesService {
 
     return sumOfRatings._sum.rating / countOfReviews;
   }
+
+  export async function removePlace(req: Request, res: Response) {
+    const placeId = parseInt(req.params.placeId);
+    if (!placeId) {
+      return Res.property_required(res, 'placeId');
+    }
+
+    try {
+      await prisma.$transaction([
+        prisma.place.delete({
+          where: { id: placeId },
+        }),
+        prisma.externalLink.deleteMany({
+          where: { placeId: placeId },
+        }),
+        prisma.review.deleteMany({
+          where: { placeId: placeId },
+        }),
+        prisma.image.deleteMany({
+          where: { placeId: placeId },
+        }),
+        prisma.userVisitedPlaces.deleteMany({
+          where: { placeId: placeId },
+        }),
+      ]);
+      return Res.success(res, { message: 'Removed' });
+    } catch (error) {
+      return Res.bad_request(res, 'Server Error');
+    }
+  }
+
+  export async function updatePlaceDescription(req: Request, res: Response) {
+    try {
+      const placeId = parseInt(req.params.placeId);
+      const newDescription = req.params.newDescription;
+
+      const updatedPlace = await prisma.place.update({
+        where: { id: placeId },
+        data: { description: newDescription },
+      });
+
+      return Res.success(res, updatedPlace);
+    } catch (error) {
+      return Res.bad_request(res, 'Server Error');
+    }
+  }
+
+  export async function getLatestAddedPlaces(req: Request, res: Response) {
+    try {
+      const latestPlaces = await prisma.place.findMany({
+        take: 3,
+        orderBy: [{ createdAt: 'desc' }, { updatedAt: 'desc' }],
+      });
+
+      return Res.success(res, latestPlaces);
+    } catch (error) {
+      return Res.bad_request(res, 'Server Error');
+    }
+  }
 }
