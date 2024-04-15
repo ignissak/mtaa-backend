@@ -57,6 +57,21 @@ class PlacesRoutes {
       AuthService.requireLogin,
       PlacesService.deletePlaceReview,
     );
+    this.router.delete(
+      '/places/:placeId',
+      AuthService.requireLogin,
+      PlacesService.removePlace,
+    );
+    this.router.put(
+      '/places/:placeId/description',
+      AuthService.requireLogin,
+      PlacesService.updatePlaceDescription,
+    );
+    this.router.get(
+      '/places/latest',
+      AuthService.requireLogin,
+      PlacesService.getLatestAddedPlaces,
+    );
   }
 }
 

@@ -64,4 +64,14 @@ export namespace LeaderboardService {
 
     return Res.success(res, result[0]);
   }
+
+  export async function getAllUsers(req: Request, res: Response) {
+    const userCount = await prisma.user.count();
+
+    if (userCount) {
+      return Res.success(res, userCount);
+    }
+
+    return Res.bad_request(res, 'Server Error');
+  }
 }

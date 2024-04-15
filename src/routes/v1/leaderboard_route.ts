@@ -21,6 +21,11 @@ class LeaderboardRoutes {
       AuthService.requireLogin,
       LeaderboardService.getUserPosition,
     );
+    this.router.get(
+      '/users',
+      AuthService.requireLogin,
+      LeaderboardService.getAllUsers,
+    );
   }
 }
 
