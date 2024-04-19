@@ -19,6 +19,7 @@ This is the backend of the MTAA project. It is a REST API that provides data for
 2. Run `npm install` or `pnpm install`
 3. Clone the `.env.example` file and rename it to `.env`
 4. Fill in the `.env` file with your database credentials and/or insert postgres setup credentials for local testing
+5. Copy all images from `prisma/assets` into `public/images`
 
 ### Setup database
 
