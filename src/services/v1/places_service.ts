@@ -473,23 +473,23 @@ export namespace PlacesService {
       return review;
     });
 
-    const sumOfRatings = await prisma.review.aggregate({
-      where: {
-        placeId: placeId,
-      },
-      _sum: {
-        rating: true,
-      },
-    });
-
     const countOfReviews = await prisma.review.count({
       where: {
         placeId: placeId,
       },
     });
 
+    const averageRating = await prisma.review.aggregate({
+      where: {
+        placeId: placeId,
+      },
+      _avg: {
+        rating: true,
+      },
+    });
+
     return Res.successPaginated(res, reviews, Math.ceil(count / limit), {
-      sumOfRatings,
+      averageRating,
       countOfReviews,
     });
   }
