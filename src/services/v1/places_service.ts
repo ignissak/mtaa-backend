@@ -695,7 +695,7 @@ export namespace PlacesService {
       return Res.bad_request(res, 'Server Error');
     }
   }
-
+  
   export async function getVisitedPlacesByUser(req: Request, res: Response) {
     const userId = parseInt(req.params.userId);
 

@@ -260,7 +260,7 @@ export namespace UsersService {
       return Res.bad_request(res, 'Server Error');
     }
   }
-
+  
   export async function deleteReviewById(req: Request, res: Response) {
     try {
       const reviewId = parseInt(req.params.reviewId);
