@@ -38,7 +38,7 @@ export namespace AuthService {
 
     const access_token = await generateAccessToken(newUser.id);
     return Res.created(res, {
-      id: newUser.id,
+      userId: newUser.id,
       email: newUser.email,
       access_token,
     });
