@@ -508,8 +508,7 @@ export namespace PlacesService {
       return Res.unauthorized(res);
     }
 
-    const body = req.body;
-    const { rating, comment } = body;
+    const { rating, comment } = req.body;
     if (!rating || !comment) {
       return Res.properties_required(res, ['rating', 'comment']);
     }
@@ -542,6 +541,10 @@ export namespace PlacesService {
       update: {
         rating: parseInt(rating),
         comment: comment,
+        images: {
+          set: [],
+          create: fileName ? { fileName: fileName } : undefined,
+        }
       },
       create: {
         userId: userId,

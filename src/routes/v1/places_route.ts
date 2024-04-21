@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthService } from '../../services/v1/auth_service';
 import { PlacesService } from '../../services/v1/places_service';
-import { Storage } from '../../utils/storage';
+import upload from '../../utils/storage';
 
 class PlacesRoutes {
   public router: Router;
@@ -49,7 +49,7 @@ class PlacesRoutes {
     this.router.put(
       '/reviews/:placeId',
       AuthService.requireLogin,
-      Storage.upload.single('image'),
+      upload.single('image'),
       PlacesService.upsertPlaceReview,
     );
     this.router.delete(
