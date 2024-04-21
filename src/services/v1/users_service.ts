@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
+import { readFile } from 'fs/promises';
 import prisma from '../../db';
 import { Res } from '../../utils/res';
 
@@ -164,6 +165,7 @@ export namespace UsersService {
 
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
+    const placeId = parseInt(req.query.placeId as string) || null;
     if (page < 1 || limit < 1) {
       return Res.bad_request(res, 'Invalid page or limit');
     }
@@ -187,6 +189,7 @@ export namespace UsersService {
     const reviews = await prisma.review.findMany({
       where: {
         userId: userId,
+        placeId: placeId ? placeId : undefined,
       },
       select: {
         place: {
@@ -199,6 +202,12 @@ export namespace UsersService {
         id: true,
         rating: true,
         comment: true,
+        images: {
+          select: {
+            id: true,
+            fileName: true,
+          },
+        },
       },
       take: limit,
       skip: (page - 1) * limit,
@@ -206,8 +215,26 @@ export namespace UsersService {
         createdAt: 'desc',
       },
     });
+    let result = reviews;
 
-    return Res.successPaginated(res, reviews, Math.ceil(count / limit));
+    result = await Promise.all(
+      result.map(async (review) => {
+        review.images = await Promise.all(
+          review.images.map(async (image) => {
+            const data = await readFile(`public/images/${image.fileName}`);
+            return {
+              fileName: image.fileName,
+              id: image.id,
+              data: data.toString('base64'),
+            };
+          }),
+        );
+
+        return review;
+      }),
+    );
+
+    return Res.successPaginated(res, result, Math.ceil(count / limit));
   }
 
   export async function getTopReviewers(req: Request, res: Response) {
