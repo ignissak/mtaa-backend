@@ -5,7 +5,8 @@ import { Res } from '../../utils/res';
 
 export namespace UsersService {
   export async function updateSettings(req: Request, res: Response) {
-    const { appearance, visitedPublic, language, name } = req.body;
+    const { appearance, visitedPublic, language } = req.body;
+    let { name } = req.body;
     const userId = req.auth?.userId;
 
     if (!userId) {
@@ -46,6 +47,7 @@ export namespace UsersService {
       return Res.bad_request(res, 'language must be a valid value');
     }
 
+    if (name === null) name = '';
     if (name.length < 3 || name.length > 20) {
       return Res.bad_request(res, 'name must be between 3 and 20 characters');
     }
@@ -260,7 +262,7 @@ export namespace UsersService {
       return Res.bad_request(res, 'Server Error');
     }
   }
-  
+
   export async function deleteReviewById(req: Request, res: Response) {
     try {
       const reviewId = parseInt(req.params.reviewId);
