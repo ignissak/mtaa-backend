@@ -695,4 +695,43 @@ export namespace PlacesService {
       return Res.bad_request(res, 'Server Error');
     }
   }
+  
+  export async function getVisitedPlacesByUser(req: Request, res: Response) {
+    const userId = parseInt(req.params.userId);
+
+    try {
+      let result = (await prisma.$queryRaw`
+        SELECT p.*,
+              array_to_json(array_agg(DISTINCT I."fileName")) as images,
+              COUNT(uvp."userId")::integer                    AS visitors
+        FROM public."Place" p
+                JOIN public."UserVisitedPlaces" uvp ON p."id" = uvp."placeId"
+                JOIN public."Image" I on p.id = I."placeId"
+        WHERE uvp."userId" = ${userId}
+        GROUP BY p."id", p.name
+        LIMIT 10;
+      `) as Place[];
+
+      result = await Promise.all(
+        result.map(async (place) => {
+          place.images = await Promise.all(
+            place.images.map(async (image) => {
+              const data = await readFile(`public/images/${image}`);
+              return {
+                fileName: image.fileName,
+                data: data.toString('base64'),
+              };
+            }),
+          );
+
+          return place;
+        }),
+      );
+
+      return Res.success(res, result);
+    } catch (error) {
+      console.error('Error fetching visited places by user:', error);
+      return Res.bad_request(res, 'Internal server error');
+    }
+  }
 }

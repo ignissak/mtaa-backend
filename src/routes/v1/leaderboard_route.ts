@@ -17,6 +17,11 @@ class LeaderboardRoutes {
       LeaderboardService.getTopLast30Days,
     );
     this.router.get(
+      '/overall',
+      AuthService.requireLogin,
+      LeaderboardService.getTopOverall,
+    );
+    this.router.get(
       '/:userId',
       AuthService.requireLogin,
       LeaderboardService.getUserPosition,

@@ -72,6 +72,11 @@ class PlacesRoutes {
       AuthService.requireLogin,
       PlacesService.getLatestAddedPlaces,
     );
+    this.router.get(
+      '/visited/:userId',
+      AuthService.requireLogin,
+      PlacesService.getVisitedPlacesByUser,
+    );
   }
 }
 

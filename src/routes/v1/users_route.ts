@@ -37,6 +37,11 @@ class UsersRoutes {
       AuthService.requireLogin,
       UsersService.getUsersFavoritePlaces,
     );
+    this.router.delete(
+      '/reviews/:reviewId',
+      AuthService.requireLogin,
+      UsersService.deleteReviewById,
+    );
   }
 }
 

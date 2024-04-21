@@ -260,6 +260,18 @@ export namespace UsersService {
       return Res.bad_request(res, 'Server Error');
     }
   }
-
   
+  export async function deleteReviewById(req: Request, res: Response) {
+    try {
+      const reviewId = parseInt(req.params.reviewId);
+      await prisma.review.delete({
+        where: {
+          id: reviewId,
+        },
+      });
+      return Res.success(res, { message: 'Removed' });
+    } catch (error) {
+      return Res.bad_request(res, 'Server Error');
+    }
+  }
 }
