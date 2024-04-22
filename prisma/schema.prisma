@@ -104,7 +104,6 @@ model Place {
   visitedBy UserVisitedPlaces[]
   images    Image[]
   reviews   Review[]
-  links     ExternalLink[]
 
   @@index([latitude, longitude, name, description, qrIdentifier, type, region])
 }
@@ -161,17 +160,4 @@ enum LinkType {
   INSTAGRAM
   EMAIL
   WIKI
-}
-
-model ExternalLink {
-  id   Int      @id @default(autoincrement())
-  type LinkType
-  url  String
-  alt  String
-
-  placeId Int
-  place   Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

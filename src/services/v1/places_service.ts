@@ -651,9 +651,6 @@ export namespace PlacesService {
         prisma.place.delete({
           where: { id: placeId },
         }),
-        prisma.externalLink.deleteMany({
-          where: { placeId: placeId },
-        }),
         prisma.review.deleteMany({
           where: { placeId: placeId },
         }),

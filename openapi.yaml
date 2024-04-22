@@ -1,0 +1,1014 @@
+openapi: 3.0.3
+info:
+  title: MTAA backend dokumentacia - Bordas & Jurcisin
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: Authentication
+    description: Everything about authentication
+  - name: Users
+    description: User manipulation
+  - name: Places
+    description: Information about places
+  - name: Leaderboard
+    description: Information about leaderboards
+paths:
+  '/v1/auth/login':
+    post:
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Correct login credentials
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/AccessToken'
+                          - $ref: '#/components/schemas/UserId'
+        '401':
+          description: Incorrect login credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '400':
+          description: Missing body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  '/v1/auth/register':
+    post:
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '201':
+          description: Correct login credentials
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Created'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/AccessToken'
+                          - $ref: '#/components/schemas/UserId'
+                          - $ref: '#/components/schemas/Email'
+        '409':
+          description: Email already used
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Conflict'
+        '400':
+          description: Missing body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  '/v1/places':
+    get:
+      description: Searches places
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/LatitudeQuery'
+        - $ref: '#/components/parameters/LongitudeQuery'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/Region'
+        - $ref: '#/components/parameters/Type'
+      responses:
+        '200':
+          description: 'Found place'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - $ref: '#/components/schemas/Place'
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'        
+  '/v1/places/trending':
+    get:
+      description: Gets trending places
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 'Found trending places'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Place'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+  '/v1/places/{placeId}':
+    get:
+      description: Gets place's information
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Place not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '200':
+          description: 'Found place'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - $ref: '#/components/schemas/Place'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+  '/v1/places/visits/{userId}':
+    get:
+      description: Returns user's visited places
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '403':
+          description: User has viewing visited places disabled for public
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '200':
+          description: User visited places
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/VisitedPlace'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+  '/v1/places/visits/{placeId}':
+    delete:
+      description: Marks place as not visited
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '200':
+          description: Deleted visited place
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - $ref: '#/components/schemas/VisitedPlace'
+        '404':
+          description: Place not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+  '/v1/places/visits':
+    post:
+      description: Mark place as visited
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Latitude'
+              - $ref: '#/components/schemas/Longitude'
+              - $ref: '#/components/schemas/QrData'
+      responses:
+        '409':
+          description: Duplicate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conflict'
+        '400':
+          description: Missing parameters / You are too far away from the place
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Place not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: Marked place as visited
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/PlaceId'
+                          - $ref: '#/components/schemas/UserId'
+                          - type: object
+                            properties:
+                              place:
+                                allOf:
+                                  - $ref: '#/components/schemas/Points'
+  '/v1/places/reviews/{placeId}':
+    get:
+      description: Get place reviews
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: Place not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: Place reviews
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Review'
+    put:
+      description: Add or update a review
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                comment:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '400':
+          description: Missing parameters / You have to have the place marked as visited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: Review created or updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Id'
+                          - $ref: '#/components/schemas/Comment'
+                          - $ref: '#/components/schemas/Rating'
+                          - $ref: '#/components/schemas/PlaceId'
+                          - $ref: '#/components/schemas/UserId'
+                          - $ref: '#/components/schemas/CreatedAt'
+                          - $ref: '#/components/schemas/UpdatedAt'
+    delete:
+      description: Remove your review of a place
+      tags: [Places]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '200':
+          description: Deleted visited place
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Id'
+                          - $ref: '#/components/schemas/Comment'
+                          - $ref: '#/components/schemas/Rating'
+                          - $ref: '#/components/schemas/PlaceId'
+                          - $ref: '#/components/schemas/UserId'
+                          - $ref: '#/components/schemas/CreatedAt'
+                          - $ref: '#/components/schemas/UpdatedAt'
+        '404':
+          description: Place not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '400':
+          description: Missing parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  '/v1/users/settings':
+    post:
+      description: Update settings
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Appearance'
+                - $ref: '#/components/schemas/VisitedPublic'
+                - $ref: '#/components/schemas/Language'
+                - $ref: '#/components/schemas/Name'
+      responses:
+        '400':
+          description: Missing parameters / Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: Settings updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Id'
+                          - $ref: '#/components/schemas/Name'
+                          - type: object
+                            properties:
+                              settings:
+                                allOf:
+                                  - $ref: '#/components/schemas/Appearance'
+                                  - $ref: '#/components/schemas/VisitedPublic'
+                                  - $ref: '#/components/schemas/Language'
+  '/v1/users/{userId}/reviews':
+    get:
+      description: Mark place as visited
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '400':
+          description: Missing parameters 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: User reviews
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserReview'
+  '/v1/leaderboard':
+    get:
+      description: Get top last 30 days
+      tags: [Leaderboard]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Leaderboard entries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LeaderboardEntry'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+  '/v1/leaderboard/overall':
+    get:
+      description: Get top overall
+      tags: [Leaderboard]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      security:
+        - bearerAuth: []
+      responses:
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: Leaderboard entries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LeaderboardEntry'
+  '/v1/leaderboard/{userId}':
+    get:
+      description: Get user's position
+      tags: [Leaderboard]
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/UserId'
+      security:
+        - bearerAuth: []
+      responses:
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'  
+        '200':
+          description: Leaderboard entries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LeaderboardEntry'
+components:
+  parameters:
+    Page:
+      in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        example: 1
+    Limit:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        example: 10
+    LatitudeQuery:
+      in: query
+      name: latitude
+      required: true
+      schema:
+        type: number
+        example: 44.687497
+    LongitudeQuery:
+      in: query
+      name: longitude
+      required: true
+      schema:
+        type: number
+        example: 44.687497
+    Search:
+      in: query
+      name: query
+      required: false
+      schema:
+        type: string
+    Region:
+      in: query
+      name: region
+      required: false
+      schema:
+        type: string
+        example: bratislava;other
+    Type:
+      in: query
+      name: type
+      required: false
+      schema:
+        type: string
+        example: castles;other
+    PlaceId:
+      in: path
+      name: placeId
+      required: true
+      schema:
+        type: integer
+        example: 5
+    UserId:
+      in: path
+      name: userId
+      required: true
+      schema:
+        type: integer
+        example: 9
+  schemas:
+    Login:
+      type: object
+      required:
+        - email
+        - password
+      allOf:
+        - $ref: '#/components/schemas/Email'
+        - $ref: '#/components/schemas/Password'
+    Email:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'john@doe.com'
+    Name:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Jane Doe'
+    Password:
+      type: object
+      properties:
+        password:
+          type: string
+          example: 'SuperStrongPassword'
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxMzExMzU3NiwiZXhwIjo0ODY4ODczNTc2fQ.ryk8V1hlIaC8La1c_2sSSWtAAjRujuCa4WBIgswK_gw'
+    UserId:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+    PlaceId:
+      type: object
+      properties:
+        placeId:
+          type: integer
+          example: 2
+    Appearance:
+      type: object
+      properties:
+        appearance:
+          type: string
+          example: 'dark_mode'
+    VisitedPublic:
+      type: object
+      properties:
+        visitedPublic:
+          type: boolean
+          example: false
+    Language:
+      type: object
+      properties:
+        language:
+          type: string
+          example: "EN-GB"
+    Place:
+      type: object
+      properties:
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Id'
+            - $ref: '#/components/schemas/PlaceName'
+            - $ref: '#/components/schemas/PlaceDescription'
+            - $ref: '#/components/schemas/Latitude'
+            - $ref: '#/components/schemas/Longitude'
+            - $ref: '#/components/schemas/CreatedAt'
+            - $ref: '#/components/schemas/UpdatedAt'
+            - $ref: '#/components/schemas/PlaceType'
+            - $ref: '#/components/schemas/Points'
+            - $ref: '#/components/schemas/PlaceRegion'
+            - type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Image'
+    VisitedPlace:
+      type: object
+      properties:
+        data:
+          allOf:
+            - $ref: '#/components/schemas/UserId'
+            - $ref: '#/components/schemas/PlaceId'
+            - $ref: '#/components/schemas/CreatedAt'
+            - $ref: '#/components/schemas/UpdatedAt'
+    Review:
+      type: object
+      allOf:
+        - type: object
+          properties:
+            user:
+              allOf:
+                - $ref: '#/components/schemas/Id'
+                - $ref: '#/components/schemas/Name'
+                - $ref: '#/components/schemas/Email'
+        - $ref: '#/components/schemas/Id'
+        - $ref: '#/components/schemas/Rating'
+        - $ref: '#/components/schemas/Comment'
+        - $ref: '#/components/schemas/CreatedAt'
+        - type: object
+          properties:
+            images:
+              type: array
+              items:
+                $ref: '#/components/schemas/Image'
+    UserReview:
+      type: object
+      allOf:
+        - type: object
+          properties:
+            place:
+              allOf:
+                - $ref: '#/components/schemas/Id'
+                - $ref: '#/components/schemas/Name'
+                - $ref: '#/components/schemas/PlaceType'
+        - $ref: '#/components/schemas/Id'
+        - $ref: '#/components/schemas/Rating'
+        - $ref: '#/components/schemas/Comment'
+        - type: object
+          properties:
+            images:
+              type: array
+              items:
+                $ref: '#/components/schemas/Image'
+    LeaderboardEntry:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Id'
+        - $ref: '#/components/schemas/Name'
+        - $ref: '#/components/schemas/Points'
+        - $ref: '#/components/schemas/Position'
+        - $ref: '#/components/schemas/VisitedPlaces'
+    Position:
+      type: object
+      properties:
+        position:
+          type: integer
+          example: 2
+    VisitedPlaces:
+      type: object
+      properties:
+        visited_places:
+          type: integer
+          example: 11
+    Id:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+    PlaceName:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Bratislavský hrad'
+    PlaceDescription:
+      type: object
+      properties:
+        description:
+          type: string
+          example: 'Bratislavský hrad je súbor stavieb v historickom areáli, ktorý zaberá vrchol návršia na juhozápadnom ostrohu malokarpatského chrbta na ľavom brehu Dunaja v Bratislave. Hradu dominuje monumentálna stavba bývalého kráľovského paláca tvoriaca neodmysliteľnú panorámu hlavného mesta Slovenska. Svojím zástojom v dejinách Veľkej Moravy, Uhorska, Česko-Slovenska a moderného Slovenska predstavuje Bratislavský hrad významný pamätník spoločensko-historického vývoja v tejto oblasti.'
+    Latitude:
+      type: object
+      properties:
+        latitude:
+          type: number
+          example: 48.14221557240078
+    Longitude:
+      type: object
+      properties:
+        longitude:
+          type: number
+          example: 48.14221557240078
+    CreatedAt:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: '2024-04-09T18:50:24.853Z'
+    UpdatedAt:
+      type: object
+      properties:
+        updatedAt:
+          type: string
+          example: '2024-04-09T18:50:24.853Z'
+    PlaceType:
+      type: object
+      properties:
+        type:
+          type: string
+          example: 'CASTLES'
+    Points:
+      type: object
+      properties:
+        points:
+          type: integer
+          example: 10
+    Rating:
+      type: object
+      properties:
+        rating:
+          type: integer
+          example: 3
+    Comment:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id mi condimentum, semper nulla quis, luctus sapien. Nullam viverra ex eget eros fermentum, id fermentum libero vestibulum.'
+    PlaceRegion:
+      type: object
+      properties:
+        region:
+          type: string
+          example: 'BRATISLAVA'
+    QrData:
+      type: object
+      properties:
+        qrData:
+          type: string
+          example: '0d89986b-08b0-40b7-8726-3c825e38f6bf'
+    Unauthorized:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 401
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: 'Unauthorized!'
+    BadRequest:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: 'Bad Request!'
+    Conflict:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 409
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: 'Conflict!'
+    Forbidden:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 403
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: 'Forbidden!'
+    NotFound:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 404
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: 'Not Found!'
+    Success:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        success:
+          type: boolean
+          example: true
+    Created:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 201
+        success:
+          type: boolean
+          example: true
+    Image:
+      type: object
+      properties:
+        data:
+          type: string
+          example: '/9j/4gIoSUNDX1BST0ZJTEUAAQEAAAIYAAAAAAIQAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
