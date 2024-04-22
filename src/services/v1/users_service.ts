@@ -106,7 +106,7 @@ export namespace UsersService {
     });
 
     if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
-      return Res.unauthorized(res);
+      return Res.forbidden(res);
     }
 
     await prisma.user.update({
