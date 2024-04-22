@@ -507,6 +507,50 @@ paths:
                                   - $ref: '#/components/schemas/Appearance'
                                   - $ref: '#/components/schemas/VisitedPublic'
                                   - $ref: '#/components/schemas/Language'
+  '/v1/users/password':
+    post:
+      description: Update password
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/OldPassword'
+                - $ref: '#/components/schemas/NewPassword'
+      responses:
+        '400':
+          description: Missing parameters / Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '401':
+          description: Missing or invalid bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '403':
+          description: Password mismatch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+        '200':
+          description: Settings updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Success'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/Id'
   '/v1/users/{userId}/reviews':
     get:
       description: Mark place as visited
@@ -718,6 +762,18 @@ components:
       type: object
       properties:
         password:
+          type: string
+          example: 'SuperStrongPassword'
+    OldPassword:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          example: 'SuperStrongPassword'
+    NewPassword:
+      type: object
+      properties:
+        newPassword:
           type: string
           example: 'SuperStrongPassword'
     AccessToken:
