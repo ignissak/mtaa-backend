@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@prisma/client':
-    specifier: 5.12.1
-    version: 5.12.1(prisma@5.12.1)
+    specifier: 5.13.0
+    version: 5.13.0(prisma@5.12.1)
   '@types/multer':
     specifier: ^1.4.11
     version: 1.4.11
@@ -227,8 +227,8 @@ packages:
       fastq: 1.17.1
     dev: true
 
-  /@prisma/client@5.12.1(prisma@5.12.1):
-    resolution: {integrity: sha512-6/JnizEdlSBxDIdiLbrBdMW5NqDxOmhXAJaNXiPpgzAPr/nLZResT6MMpbOHLo5yAbQ1Vv5UU8PTPRzb0WIxdA==}
+  /@prisma/client@5.13.0(prisma@5.12.1):
+    resolution: {integrity: sha512-uYdfpPncbZ/syJyiYBwGZS8Gt1PTNoErNYMuqHDa2r30rNSFtgTA/LXsSk55R7pdRTMi5pHkeP9B14K6nHmwkg==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
